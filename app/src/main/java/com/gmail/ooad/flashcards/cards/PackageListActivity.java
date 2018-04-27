@@ -5,7 +5,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-class PackageListActivity extends ListViewActivity {
+public class PackageListActivity extends ListViewActivity {
     // request codes for intents
     private static final int SyncList = 100;
 
@@ -39,7 +39,13 @@ class PackageListActivity extends ListViewActivity {
 
     @Override
     protected void onEditRecord() {
-        Toast.makeText(getApplicationContext(), "edit", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, EditPackageActivity.class);
+        String name = mRecordAdapter.getItem(mSelected.get(0));
+        assert name != null;
+        PackageData data = CardController.GetPackage(name);
+        intent.putExtra("name", data.getName());
+        intent.putExtra("color", data.getColor());
+        startActivityForResult(intent, SyncList);
     }
 
     @Override

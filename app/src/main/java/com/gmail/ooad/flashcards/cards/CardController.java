@@ -4,6 +4,7 @@ package com.gmail.ooad.flashcards.cards;
  */
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.gmail.ooad.flashcards.ApplicationContext;
 
@@ -37,12 +38,13 @@ public class CardController {
         return  mCardDatabase.addCard(packageName, cardData);
     }
 
-    public static boolean UpdatePackage(@NonNull PackageData packageData) {
-        return mCardDatabase.updatePackage(packageData);
+    public static boolean UpdatePackage(@NonNull PackageData packageData, @Nullable String oldPackageName) {
+        return mCardDatabase.updatePackage(packageData, oldPackageName);
     }
 
-    public static boolean UpdateCard(@NonNull String packageName, @NonNull CardData cardData) {
-        return mCardDatabase.updateCard(packageName, cardData);
+    public static boolean UpdateCard(@NonNull String packageName, @NonNull CardData cardData,
+                                     @Nullable String oldCardName) {
+        return mCardDatabase.updateCard(packageName, cardData, oldCardName);
     }
 
     public static boolean HasPackage(@NonNull String name) {

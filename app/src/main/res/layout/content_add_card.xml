@@ -16,7 +16,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical"
-            android:hint="@string/edit_card_name_hint" />
+            android:inputType="textCapSentences"
+            android:hint="@string/edit_card_name_hint"
+            android:singleLine="true" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -28,6 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical"
+            android:inputType="textMultiLine|textCapSentences"
             android:hint="@string/edit_card_front_hint" />
     </android.support.design.widget.TextInputLayout>
 
@@ -40,6 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical"
+            android:inputType="textMultiLine|textCapSentences"
             android:hint="@string/edit_card_back_hint" />
     </android.support.design.widget.TextInputLayout>
 

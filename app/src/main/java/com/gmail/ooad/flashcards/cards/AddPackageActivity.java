@@ -18,8 +18,8 @@ import com.gmail.ooad.flashcards.R;
 import com.pes.androidmaterialcolorpickerdialog.ColorPicker;
 import com.pes.androidmaterialcolorpickerdialog.ColorPickerCallback;
 
-class AddPackageActivity extends AppCompatActivity {
-    private int mColor;
+public class AddPackageActivity extends AppCompatActivity {
+    protected int mColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,27 +35,23 @@ class AddPackageActivity extends AppCompatActivity {
             bar.setDisplayHomeAsUpEnabled(true);
         }
 
+        mColor = getResources().getColor(R.color.colorPrimaryDark);
+
         Button btn = findViewById(R.id.color_button);
         ((GradientDrawable)btn.getBackground()).setColor(mColor);
+
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 pickColor();
             }
         });
-
-        mColor = getResources().getColor(R.color.colorPrimaryDark);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.add_package_menu, menu);
         return true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 
     @Override

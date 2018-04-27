@@ -12,15 +12,8 @@ import android.widget.Toast;
 
 import com.gmail.ooad.flashcards.R;
 
-class AddCardActivity extends AppCompatActivity {
-
-    private String mName;
-
-    private String mFront;
-
-    private String mBack;
-
-    private String mPackage;
+public class AddCardActivity extends AppCompatActivity {
+    protected String mPackage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +41,6 @@ class AddCardActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -68,7 +56,7 @@ class AddCardActivity extends AppCompatActivity {
         }
     }
 
-    private boolean onSaveCard() {
+    protected boolean onSaveCard() {
         CharSequence name = ((TextInputEditText)findViewById(R.id.card_name)).getText();
         CharSequence front = ((TextInputEditText)findViewById(R.id.card_front)).getText();
         CharSequence back = ((TextInputEditText)findViewById(R.id.card_back)).getText();

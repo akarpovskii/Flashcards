@@ -6,7 +6,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
+
+import com.gmail.ooad.flashcards.BuildConfig;
 
 import java.util.ArrayList;
 
@@ -135,12 +138,13 @@ class CardDatabaseAdapter extends SQLiteOpenHelper {
     }
 
     CardData getCard(@NonNull String packageName, @NonNull String cardName) {
-        String where = PackageName + "=? and " + CardName + "=?";
+        String where = CardPackage + "=? and " + CardName + "=?";
         SQLiteDatabase db = getReadableDatabase();
 
-        Cursor cursor = db.query(PackagesTable, null, where,
+        Cursor cursor = db.query(CardsTable, null, where,
                 new String[]{packageName, cardName}, null, null, null);
 
+        cursor.moveToFirst();
         String cardFront = cursor.getString(cursor.getColumnIndex(CardFront));
         String cardBack = cursor.getString(cursor.getColumnIndex(CardBack));
 
@@ -191,12 +195,84 @@ class CardDatabaseAdapter extends SQLiteOpenHelper {
         return success;
     }
 
-    boolean updatePackage(@NonNull PackageData packageData) {
-        return false;
+    /**
+     *
+     * @param oldPackageName - if null, the name remains unchanged
+     */
+    boolean updatePackage(@NonNull PackageData packageData, @Nullable String oldPackageName) {
+        String newPackageName = packageData.getName();
+        boolean newNameQuarried = oldPackageName != null && !newPackageName.equals(oldPackageName);
+
+        if (newNameQuarried && hasPackage(newPackageName)) {
+            return false;
+        }
+
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        if (newNameQuarried) {
+            values.put(PackageName, newPackageName);
+        }
+        values.put(PackageColor, packageData.getColor());
+
+        String where = PackageName + "=?";
+
+        if (oldPackageName == null) {
+            oldPackageName = newPackageName;
+        }
+
+        int count = db.update(PackagesTable, values, where, new String[]{oldPackageName});
+        if (BuildConfig.DEBUG) {
+            if (count != 1) throw new AssertionError();
+        }
+
+        // Update cards
+        if (newNameQuarried) {
+            values = new ContentValues();
+            values.put(CardPackage, newPackageName);
+
+            where = CardPackage + "=?";
+            db.update(CardsTable, values, where, new String[]{oldPackageName});
+        }
+        db.close();
+        return true;
     }
 
-    boolean updateCard(@NonNull String packageName, @NonNull CardData cardData) {
-        return false;
+    /**
+     *
+     * @param oldCardName - if null, the name remains unchanged
+     */
+    boolean updateCard(@NonNull String packageName, @NonNull CardData cardData,
+                       @Nullable String oldCardName) {
+
+        String newCardName = cardData.getName();
+        boolean newNameQuarried = oldCardName != null && !newCardName.equals(oldCardName);
+
+        if (newNameQuarried && hasCard(packageName, newCardName)) {
+            return false;
+        }
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        if (newNameQuarried) {
+            values.put(CardName, newCardName);
+        }
+        values.put(CardFront, cardData.getFront());
+        values.put(CardBack, cardData.getBack());
+
+        String where = CardPackage + "=?" + " and " + CardName + "=?";
+
+        if (oldCardName == null) {
+            oldCardName = newCardName;
+        }
+
+        int count = db.update(CardsTable, values, where, new String[]{packageName, oldCardName});
+        if (BuildConfig.DEBUG) {
+            if (count != 1) throw new AssertionError();
+        }
+
+        db.close();
+        return true;
     }
 
     boolean hasPackage(@NonNull String name) {

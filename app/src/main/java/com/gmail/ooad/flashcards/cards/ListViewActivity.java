@@ -109,8 +109,11 @@ public abstract class ListViewActivity extends AppCompatActivity
         return true;
     }
 
+    Menu mMenu;
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        // there is a space in orderInCategory in case we want to manage it. See list_view_menu.xml
+        mMenu = menu;
         switch (mListMode) {
             case View:
                 menu.findItem(R.id.action_edit).setVisible(false);
@@ -118,7 +121,8 @@ public abstract class ListViewActivity extends AppCompatActivity
                 menu.findItem(R.id.action_settings).setVisible(true);
                 break;
             case Selection:
-                menu.findItem(R.id.action_edit).setVisible(mSelected.size() == 1);
+                menu.findItem(R.id.action_edit).setVisible(true);
+//                menu.findItem(R.id.action_edit).setVisible(mSelected.size() == 1);
                 menu.findItem(R.id.action_delete).setVisible(true);
                 menu.findItem(R.id.action_settings).setVisible(false);
                 break;
@@ -138,6 +142,7 @@ public abstract class ListViewActivity extends AppCompatActivity
                 return true;
             case R.id.action_edit:
                 onEditRecord();
+                switchListMode();
                 return true;
             case R.id.action_delete:
                 onDeleteRecord();
@@ -225,7 +230,7 @@ public abstract class ListViewActivity extends AppCompatActivity
                             view.setBackgroundColor(getResources().getColor(R.color.colorAccent));
                         }
 
-                        invalidateOptionsMenu();
+                        mMenu.findItem(R.id.action_edit).setVisible(mSelected.size() == 1);
                     }
                 });
 
@@ -282,6 +287,6 @@ public abstract class ListViewActivity extends AppCompatActivity
                 break;
         }
 
-        invalidateOptionsMenu();
+        supportInvalidateOptionsMenu();
     }
 }
