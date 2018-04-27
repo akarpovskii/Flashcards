@@ -30,7 +30,10 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".cards.ListViewActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".cards.PackageViewActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

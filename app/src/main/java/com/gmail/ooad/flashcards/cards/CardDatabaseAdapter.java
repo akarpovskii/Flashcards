@@ -24,7 +24,7 @@ class CardDatabaseAdapter extends SQLiteOpenHelper {
 
     private static final String DatabaseName = "cards.db";
 
-    private static final int DatabaseVersion = 1;
+    private static final int DatabaseVersion = 2;
 
 
 
@@ -54,12 +54,12 @@ class CardDatabaseAdapter extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         try {
             final String CreatePackagesTable = "create table " + PackagesTable + "(" +
-                    "rowid integer primary key, " +
+                    "ID integer primary key, " +
                     PackageName + " text not null," +
                     PackageColor + " integer not null);";
 
             final String CreateCardsTable = "create table " + CardsTable + "(" +
-                    "rowid integer primary key, " +
+                    "ID integer primary key, " +
                     CardPackage + " text not null," +
                     CardName + " text not null," +
                     CardFront + " text," +
@@ -111,7 +111,8 @@ class CardDatabaseAdapter extends SQLiteOpenHelper {
         Cursor cursor = db.query(PackagesTable, new String[]{PackageColor}, where,
                 new String[]{name}, null, null, null);
 
-        int color = cursor.getInt(0);
+        cursor.moveToFirst();
+        int color = cursor.getInt(cursor.getColumnIndex(PackageColor));
 
         cursor.close();
 

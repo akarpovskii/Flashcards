@@ -38,8 +38,6 @@ public abstract class ListViewActivity extends AppCompatActivity
 
     protected ArrayList<Integer> mSelected = new ArrayList<>();
 
-    protected Menu mMenu;  // we need this for inflation of a new menu outside the onCreateOptionsMenu
-
     protected ActionBarDrawerToggle mDrawerToggle;
 
     // request codes for intents
@@ -107,45 +105,25 @@ public abstract class ListViewActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        ActionBar bar = getSupportActionBar();
+        getMenuInflater().inflate(R.menu.list_view_menu, menu);
+        return true;
+    }
 
-        mMenu.clear();
-
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
         switch (mListMode) {
             case View:
-                for (int pos :
-                        mSelected) {
-                    ListView packagesList = findViewById(R.id.recordList);
-                    getViewByPosition(pos, packagesList).setBackgroundColor(Color.TRANSPARENT);
-                }
-
-                mSelected.clear();
-
-                if (bar != null) {
-                    bar.setDisplayHomeAsUpEnabled(false);
-                }
-                mDrawerToggle.setToolbarNavigationClickListener(null);
-                mDrawerToggle.setDrawerIndicatorEnabled(true);
-                getMenuInflater().inflate(R.menu.list_view_view_mode, mMenu);
+                menu.findItem(R.id.action_edit).setVisible(false);
+                menu.findItem(R.id.action_delete).setVisible(false);
+                menu.findItem(R.id.action_settings).setVisible(true);
                 break;
-
             case Selection:
-                mDrawerToggle.setDrawerIndicatorEnabled(false);
-                mDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        onBackPressed();
-                    }
-                });
-                if (bar != null) {
-                    bar.setDisplayHomeAsUpEnabled(true);
-                }
-                getMenuInflater().inflate(R.menu.list_view_selection_mode, mMenu);
+                menu.findItem(R.id.action_edit).setVisible(mSelected.size() == 1);
+                menu.findItem(R.id.action_delete).setVisible(true);
+                menu.findItem(R.id.action_settings).setVisible(false);
                 break;
         }
-
-        invalidateOptionsMenu();
-        return true;
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -208,7 +186,7 @@ public abstract class ListViewActivity extends AppCompatActivity
 
     abstract protected void onViewRecord(int position);
 
-    protected void switchListMode() {
+    private void switchListMode() {
         final ListView recordsList = findViewById(R.id.recordList);
 
         mListMode = mListMode == ListMode.View ? ListMode.Selection : ListMode.View;
@@ -247,7 +225,7 @@ public abstract class ListViewActivity extends AppCompatActivity
                             view.setBackgroundColor(getResources().getColor(R.color.colorAccent));
                         }
 
-                        mMenu.findItem(R.id.action_edit).setVisible(mSelected.size() == 1);
+                        invalidateOptionsMenu();
                     }
                 });
 
@@ -255,7 +233,7 @@ public abstract class ListViewActivity extends AppCompatActivity
                 break;
         }
 
-        invalidateOptionsMenu();
+        switchOptionsMenu();
     }
 
     private View getViewByPosition(int pos, ListView listView) {
@@ -268,5 +246,42 @@ public abstract class ListViewActivity extends AppCompatActivity
             final int childIndex = pos - firstListItemPosition;
             return listView.getChildAt(childIndex);
         }
+    }
+
+    private void switchOptionsMenu() {
+        ActionBar bar = getSupportActionBar();
+
+        switch (mListMode) {
+            case View:
+                for (int pos :
+                        mSelected) {
+                    ListView packagesList = findViewById(R.id.recordList);
+                    getViewByPosition(pos, packagesList).setBackgroundColor(Color.TRANSPARENT);
+                }
+
+                mSelected.clear();
+
+                if (bar != null) {
+                    bar.setDisplayHomeAsUpEnabled(false);
+                }
+                mDrawerToggle.setToolbarNavigationClickListener(null);
+                mDrawerToggle.setDrawerIndicatorEnabled(true);
+                break;
+
+            case Selection:
+                mDrawerToggle.setDrawerIndicatorEnabled(false);
+                mDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onBackPressed();
+                    }
+                });
+                if (bar != null) {
+                    bar.setDisplayHomeAsUpEnabled(true);
+                }
+                break;
+        }
+
+        invalidateOptionsMenu();
     }
 }

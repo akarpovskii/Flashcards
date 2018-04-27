@@ -1,13 +1,28 @@
 package com.gmail.ooad.flashcards.cards;
 
 import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.widget.Toast;
+
+import com.gmail.ooad.flashcards.R;
 
 import java.util.ArrayList;
 
-class PackageListActivity extends ListViewActivity {
+class PackageViewActivity extends ListViewActivity {
     // request codes for intents
     private static final int SyncList = 100;
+
+    private String mName;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        Intent intent = getIntent();
+        mName = intent.getStringExtra("package");
+        assert mName != null;
+
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -24,16 +39,17 @@ class PackageListActivity extends ListViewActivity {
     protected void syncListWitchDatabase() {
         mRecordAdapter.clear();
 
-        ArrayList<PackageData> packages = CardController.GetPackageList();
-        for (PackageData pack:
-                packages) {
-            mRecordAdapter.add(pack.getName());
+        PackageData pack = CardController.GetPackage(mName);
+        for (CardData card:
+                pack.getCards()) {
+            mRecordAdapter.add(card.getName());
         }
     }
 
     @Override
     protected void onAddRecord() {
-        Intent intent = new Intent(this, AddPackageActivity.class);
+        Intent intent = new Intent(this, AddCardActivity.class);
+        intent.putExtra("package", mName);
         startActivityForResult(intent, SyncList);
     }
 
@@ -49,8 +65,6 @@ class PackageListActivity extends ListViewActivity {
 
     @Override
     protected void onViewRecord(int position) {
-        Intent intent = new Intent(this, PackageViewActivity.class);
-        intent.putExtra("package", mRecordAdapter.getItem(position));
-        startActivityForResult(intent, SyncList);
+        Toast.makeText(getApplicationContext(), "view", Toast.LENGTH_SHORT).show();
     }
 }

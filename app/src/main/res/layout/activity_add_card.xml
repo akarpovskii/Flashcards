@@ -9,5 +9,5 @@
 
     <include layout="@layout/toolbar" />
 
-    <include layout="@layout/content_edit_card" />
+    <include layout="@layout/content_add_card" />
 </LinearLayout>
