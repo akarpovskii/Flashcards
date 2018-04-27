@@ -88,7 +88,7 @@ public class AddPackageActivity extends AppCompatActivity {
 
     private void pickColor() {
         final ColorPicker cp = new ColorPicker(AddPackageActivity.this,
-                Color.alpha(mColor), Color.red(mColor), Color.green(mColor), Color.blue(mColor));
+                Color.red(mColor), Color.green(mColor), Color.blue(mColor));
 
         cp.setCallback(new ColorPickerCallback() {
             @Override

@@ -3,6 +3,8 @@ package com.gmail.ooad.flashcards.cards;
 import android.content.Intent;
 import android.widget.Toast;
 
+import com.gmail.ooad.flashcards.R;
+
 import java.util.ArrayList;
 
 public class PackageListActivity extends ListViewActivity {
@@ -39,10 +41,11 @@ public class PackageListActivity extends ListViewActivity {
 
     @Override
     protected void onEditRecord() {
-        Intent intent = new Intent(this, EditPackageActivity.class);
         String name = mRecordAdapter.getItem(mSelected.get(0));
         assert name != null;
         PackageData data = CardController.GetPackage(name);
+
+        Intent intent = new Intent(this, EditPackageActivity.class);
         intent.putExtra("name", data.getName());
         intent.putExtra("color", data.getColor());
         startActivityForResult(intent, SyncList);
@@ -55,8 +58,18 @@ public class PackageListActivity extends ListViewActivity {
 
     @Override
     protected void onViewRecord(int position) {
+        String name = mRecordAdapter.getItem(position);
+        assert name != null;
+        PackageData data = CardController.GetPackage(name);
+
         Intent intent = new Intent(this, PackageViewActivity.class);
-        intent.putExtra("package", mRecordAdapter.getItem(position));
+        intent.putExtra("package", data.getName());
+        intent.putExtra("color", data.getColor());
         startActivityForResult(intent, SyncList);
+    }
+
+    @Override
+    protected int getSelectionColor() {
+        return getResources().getColor(R.color.colorAccent);
     }
 }

@@ -7,19 +7,36 @@
 
 
     <ImageView
+        android:id="@+id/bg_back"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:tint="@color/colorPrimary"
         android:padding="16dp"
-        android:src="@drawable/rectangle"/>
+        android:src="@drawable/rectangle"
+        android:contentDescription="@string/card_background_desc" />
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/text_back"
+    <RelativeLayout
+        android:id="@+id/card_view_back"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textSize="@dimen/font_size"
-        android:textColor="@android:color/black"
-        android:gravity="center"
-        android:padding="24dp" />
+        android:padding="24dp" >
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_centerVertical="true" >
+
+            <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/text_back"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_size"
+                android:textColor="@android:color/black"
+                android:gravity="center" />
+
+        </ScrollView>
+
+    </RelativeLayout>
 
 </FrameLayout>

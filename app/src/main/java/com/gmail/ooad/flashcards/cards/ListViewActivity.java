@@ -191,6 +191,8 @@ public abstract class ListViewActivity extends AppCompatActivity
 
     abstract protected void onViewRecord(int position);
 
+    abstract protected int getSelectionColor();
+
     private void switchListMode() {
         final ListView recordsList = findViewById(R.id.recordList);
 
@@ -209,7 +211,7 @@ public abstract class ListViewActivity extends AppCompatActivity
                     @Override
                     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int pos, long id) {
                         mSelected.add(pos);
-                        view.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                        view.setBackgroundColor(getSelectionColor());
                         switchListMode();
                         return true;
                     }
@@ -227,7 +229,7 @@ public abstract class ListViewActivity extends AppCompatActivity
                             view.setBackgroundColor(Color.TRANSPARENT);
                         } else {
                             mSelected.add(pos);
-                            view.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                            view.setBackgroundColor(getSelectionColor());
                         }
 
                         mMenu.findItem(R.id.action_edit).setVisible(mSelected.size() == 1);

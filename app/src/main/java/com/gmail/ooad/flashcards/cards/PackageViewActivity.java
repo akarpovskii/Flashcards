@@ -1,20 +1,21 @@
 package com.gmail.ooad.flashcards.cards;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 import com.gmail.ooad.flashcards.R;
+import com.gmail.ooad.flashcards.utils.ColorUtil;
 
-import java.util.ArrayList;
 
 public class PackageViewActivity extends ListViewActivity {
     // request codes for intents
     private static final int SyncList = 100;
 
-    private String mName;
+    protected String mName;
+
+    protected int mColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,9 +23,15 @@ public class PackageViewActivity extends ListViewActivity {
         mName = intent.getStringExtra("package");
         assert mName != null;
 
-        setTitle(mName);
+        mColor = intent.getIntExtra("color", getResources().getColor(R.color.colorPrimary));
 
         super.onCreate(savedInstanceState);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setBackgroundColor(mColor);
+        getWindow().setStatusBarColor(ColorUtil.darken(mColor, 12));
+
+        setTitle(mName);
     }
 
     @Override
@@ -85,6 +92,12 @@ public class PackageViewActivity extends ListViewActivity {
         intent.putExtra("name", data.getName());
         intent.putExtra("front", data.getFront());
         intent.putExtra("back", data.getBack());
+        intent.putExtra("color", mColor);
         startActivityForResult(intent, SyncList);
+    }
+
+    @Override
+    protected int getSelectionColor() {
+        return ColorUtil.darken(mColor, 24);
     }
 }
