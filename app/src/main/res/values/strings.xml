@@ -5,4 +5,18 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <string name="activity_edit_card_title">Edit</string>
+    <string name="edit_card_name_hint">Name</string>
+    <string name="edit_card_front_hint">Front</string>
+    <string name="edit_card_back_hint">Back</string>
+    <string name="menu_selection_edit">Edit</string>
+
+
+    <string name="activity_add_package_title">Add package</string>
+    <string name="add_package_name_hint">Name</string>
+    <string name="add_package_color_hint">Color</string>
+    <string name="menu_add_package_save">Save</string>
+    <string name="add_card_label">Add card</string>
+    <string name="add_package_label">Add package</string>
 </resources>

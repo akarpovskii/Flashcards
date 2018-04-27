@@ -1,6 +1,5 @@
-package com.gmail.ooad.flashcards;
+package com.gmail.ooad.flashcards.cards;
 
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -13,11 +12,11 @@ import java.util.ArrayList;
 public class PackageData {
     private String mName;
 
-    private Color mColor;
+    private int mColor;
 
     private ArrayList<CardData> mCards;
 
-    PackageData(@NonNull String name, @NonNull Color color, @Nullable ArrayList<CardData> cards) {
+    PackageData(@NonNull String name, @NonNull int color, @Nullable ArrayList<CardData> cards) {
         mName = name;
         mColor = color;
         mCards = cards;
@@ -31,11 +30,11 @@ public class PackageData {
         mName = name;
     }
 
-    public Color getColor() {
+    public int getColor() {
         return mColor;
     }
 
-    public void setColor(Color color) {
+    public void setColor(int color) {
         mColor = color;
     }
 

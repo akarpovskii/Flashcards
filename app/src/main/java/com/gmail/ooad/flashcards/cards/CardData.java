@@ -1,4 +1,4 @@
-package com.gmail.ooad.flashcards;
+package com.gmail.ooad.flashcards.cards;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
