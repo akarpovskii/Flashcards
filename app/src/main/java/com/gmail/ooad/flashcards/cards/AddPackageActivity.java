@@ -35,7 +35,7 @@ public class AddPackageActivity extends AppCompatActivity {
             bar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mColor = getResources().getColor(R.color.colorPrimaryDark);
+        mColor = getResources().getColor(R.color.colorPrimary);
 
         Button btn = findViewById(R.id.color_button);
         ((GradientDrawable)btn.getBackground()).setColor(mColor);
@@ -74,6 +74,13 @@ public class AddPackageActivity extends AppCompatActivity {
         CharSequence name = ((TextInputEditText)findViewById(R.id.package_name)).getText();
         PackageData data = new PackageData(name.toString(), mColor, null);
 
+        if (name.length() == 0) {
+            Toast.makeText(getApplicationContext(),
+                    "Please, enter the name",
+                    Toast.LENGTH_LONG).show();
+            return false;
+        }
+
         if (CardController.AddPackage(data)) {
             Intent intent = new Intent();
             setResult(RESULT_OK, intent);
@@ -95,6 +102,7 @@ public class AddPackageActivity extends AppCompatActivity {
             public void onColorChosen(int color) {
                 mColor = color;
                 Button btn = findViewById(R.id.color_button);
+//                btn.setBackgroundColor(mColor);
                 ((GradientDrawable)btn.getBackground()).setColor(mColor);
                 cp.dismiss();
             }

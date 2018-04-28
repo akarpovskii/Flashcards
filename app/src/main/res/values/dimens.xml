@@ -10,4 +10,5 @@
     <dimen name="font_size">18sp</dimen>
     <dimen name="add_package_color_margin">5dp</dimen>
     <dimen name="add_package_color_preview_margin">5dp</dimen>
+    <dimen name="elevation">4dp</dimen>
 </resources>

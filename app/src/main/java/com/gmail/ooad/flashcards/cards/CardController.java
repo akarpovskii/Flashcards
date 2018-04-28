@@ -54,4 +54,12 @@ public class CardController {
     public static boolean HasCard(@NonNull String packageName, @NonNull String cardName) {
         return mCardDatabase.hasCard(packageName, cardName);
     }
+
+    public static void RemovePackage(@NonNull String packageName) {
+        mCardDatabase.removePackage(packageName);
+    }
+
+    public static void RemoveCard(@NonNull String packageName, @NonNull String cardName) {
+        mCardDatabase.removeCard(packageName, cardName);
+    }
 }

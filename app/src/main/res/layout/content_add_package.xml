@@ -34,6 +34,7 @@
 
         <Button
             android:id="@+id/color_button"
+            android:elevation="@dimen/elevation"
             android:background="@drawable/color_preview"
             android:layout_width="@dimen/add_package_color_preview_width"
             android:layout_height="@dimen/add_package_color_preview_height"

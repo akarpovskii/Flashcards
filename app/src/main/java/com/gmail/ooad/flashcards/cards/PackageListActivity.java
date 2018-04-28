@@ -53,7 +53,14 @@ public class PackageListActivity extends ListViewActivity {
 
     @Override
     protected void onDeleteRecord() {
-        Toast.makeText(getApplicationContext(), "delete", Toast.LENGTH_SHORT).show();
+        for (int pos :
+                mSelected) {
+            String packageName = mRecordAdapter.getItem(pos);
+            assert packageName != null;
+            CardController.RemovePackage(packageName);
+        }
+
+        syncListWitchDatabase();
     }
 
     @Override

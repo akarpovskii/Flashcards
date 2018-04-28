@@ -62,6 +62,13 @@ public class AddCardActivity extends AppCompatActivity {
         CharSequence back = ((TextInputEditText)findViewById(R.id.card_back)).getText();
         CardData data = new CardData(name.toString(), front.toString(), back.toString());
 
+        if (name.length() == 0) {
+            Toast.makeText(getApplicationContext(),
+                    "Please, enter the name",
+                    Toast.LENGTH_LONG).show();
+            return false;
+        }
+
         if (CardController.AddCard(mPackage, data)) {
             Intent intent = new Intent();
             setResult(RESULT_OK, intent);

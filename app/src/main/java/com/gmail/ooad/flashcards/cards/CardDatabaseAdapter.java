@@ -298,4 +298,25 @@ class CardDatabaseAdapter extends SQLiteOpenHelper {
         db.close();
         return res;
     }
+
+    void removePackage(@NonNull String packageName) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        String where = PackageName + "=?";
+        db.delete(PackagesTable, where, new String[]{packageName});
+
+        where = CardPackage + "=?";
+        db.delete(CardsTable, where, new String[]{packageName});
+
+        db.close();
+    }
+
+    void removeCard(@NonNull String packageName, @NonNull String cardName) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        String where = CardPackage + "=? and " + CardName + "=?";
+        db.delete(CardsTable, where, new String[]{packageName, cardName});
+
+        db.close();
+    }
 }
