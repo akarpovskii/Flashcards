@@ -21,7 +21,4 @@
     <string name="add_package_label">Add package</string>
     <string name="menu_add_card_save">Save</string>
     <string name="card_background_desc">Background</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

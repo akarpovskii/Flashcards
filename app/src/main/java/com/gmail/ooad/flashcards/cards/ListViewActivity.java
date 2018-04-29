@@ -1,9 +1,11 @@
 package com.gmail.ooad.flashcards.cards;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -58,6 +60,7 @@ public abstract class ListViewActivity extends AppCompatActivity
                 onAddRecord();
             }
         });
+        add_record.setBackgroundTintList(ColorStateList.valueOf(getColorAccent()));
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(this, drawer, toolbar,
@@ -191,7 +194,7 @@ public abstract class ListViewActivity extends AppCompatActivity
 
     abstract protected void onViewRecord(int position);
 
-    abstract protected int getSelectionColor();
+    abstract protected int getColorAccent();
 
     private void switchListMode() {
         final ListView recordsList = findViewById(R.id.recordList);
@@ -211,7 +214,7 @@ public abstract class ListViewActivity extends AppCompatActivity
                     @Override
                     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int pos, long id) {
                         mSelected.add(pos);
-                        view.setBackgroundColor(getSelectionColor());
+                        view.setBackgroundColor(getColorAccent());
                         switchListMode();
                         return true;
                     }
@@ -229,7 +232,7 @@ public abstract class ListViewActivity extends AppCompatActivity
                             view.setBackgroundColor(Color.TRANSPARENT);
                         } else {
                             mSelected.add(pos);
-                            view.setBackgroundColor(getSelectionColor());
+                            view.setBackgroundColor(getColorAccent());
                         }
 
                         mMenu.findItem(R.id.action_edit).setVisible(mSelected.size() == 1);

@@ -76,7 +76,7 @@ public class PackageListActivity extends ListViewActivity {
     }
 
     @Override
-    protected int getSelectionColor() {
+    protected int getColorAccent() {
         return getResources().getColor(R.color.colorAccent);
     }
 }

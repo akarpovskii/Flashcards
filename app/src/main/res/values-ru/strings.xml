@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Flashcards</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Настройки</string>
+
+    <string name="activity_edit_card_title">Редактирование</string>
+    <string name="edit_card_name_hint">Имя</string>
+    <string name="edit_card_front_hint">Лицевая сторона</string>
+    <string name="edit_card_back_hint">Обратная сторона</string>
+    <string name="menu_selection_edit">Редактирование</string>
+
+
+    <string name="activity_add_package_title">Добавить набор</string>
+    <string name="add_package_name_hint">Имя</string>
+    <string name="add_package_color_hint">Цвет</string>
+    <string name="menu_add_package_save">Сохранить</string>
+    <string name="add_card_label">Добавить карточку</string>
+    <string name="add_package_label">Добавить набор</string>
+    <string name="menu_add_card_save">Сохранить</string>
+    <string name="card_background_desc">Фон</string>
+</resources>

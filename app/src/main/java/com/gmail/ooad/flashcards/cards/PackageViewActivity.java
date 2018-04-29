@@ -104,7 +104,7 @@ public class PackageViewActivity extends ListViewActivity {
     }
 
     @Override
-    protected int getSelectionColor() {
-        return ColorUtil.darken(mColor, 24);
+    protected int getColorAccent() {
+        return ColorUtil.darken(mColor, 20);
     }
 }
