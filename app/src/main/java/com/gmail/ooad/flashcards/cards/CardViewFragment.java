@@ -3,8 +3,7 @@ package com.gmail.ooad.flashcards.cards;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
-import android.content.Context;
-import android.net.Uri;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -65,6 +64,7 @@ public class CardViewFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_card_view, container, false);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -74,7 +74,7 @@ public class CardViewFragment extends Fragment {
 
         final TextView text_front = mCardFrontLayout.findViewById(R.id.text_front);
         text_front.setText(mFront);
-        // TextView catches onClick event for some reason even with clickable=false
+        // TextView catches events for some reason even with clickable=false
         // So we need to duplicate the onClick handler
         text_front.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +90,7 @@ public class CardViewFragment extends Fragment {
 
         final TextView text_back = mCardBackLayout.findViewById(R.id.text_back);
         text_back.setText(mBack);
-        // TextView  catches onClick event for some reason even with clickable=false.
+        // TextView  catches events for some reason even with clickable=false.
         // So we need to duplicate the onClick handler
         text_back.setOnClickListener(new View.OnClickListener() {
             @Override

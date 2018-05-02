@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:tint="@color/colorPrimary"
         android:padding="16dp"
-        android:src="@drawable/rectangle"
+        android:src="@drawable/rectangle_card_bg"
         android:contentDescription="@string/card_background_desc" />
 
     <RelativeLayout

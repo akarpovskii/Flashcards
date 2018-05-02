@@ -21,4 +21,12 @@
     <string name="add_package_label">Add package</string>
     <string name="menu_add_card_save">Save</string>
     <string name="card_background_desc">Background</string>
+    <string name="slideshow_bg_memorized_desc">Memorized background</string>
+    <string name="slideshow_bg_unmemorized_desc">Unmemorized background</string>
+    <string name="activity_slide_show_title">Slide Show</string>
+    <string name="action_slide_show">Slide show</string>
+    <string name="statistics_title">Total</string>
+    <string name="statistics_memorized_label">Memorized:</string>
+    <string name="statistics_delimiter">/</string>
+    <string name="slideshow_bg_statistics_desc">Statistics bg</string>
 </resources>

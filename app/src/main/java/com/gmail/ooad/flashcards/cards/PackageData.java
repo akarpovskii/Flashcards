@@ -9,40 +9,46 @@ import java.util.ArrayList;
  * Created by akarpovskii on 14.04.18.
  */
 
-public class PackageData {
+public class PackageData implements IPackageData {
     private String mName;
 
     private int mColor;
 
-    private ArrayList<CardData> mCards;
+    private ArrayList<ICardData> mCards;
 
-    PackageData(@NonNull String name, @NonNull int color, @Nullable ArrayList<CardData> cards) {
+    PackageData(@NonNull String name, int color, @Nullable ArrayList<ICardData> cards) {
         mName = name;
         mColor = color;
         mCards = cards;
     }
 
+    @Override
     public String getName() {
         return mName;
     }
 
+    @Override
     public void setName(String name) {
         mName = name;
     }
 
+    @Override
     public int getColor() {
         return mColor;
     }
 
+    @Override
     public void setColor(int color) {
         mColor = color;
     }
 
-    public ArrayList<CardData> getCards() {
+    @Override
+    public ArrayList<ICardData> getCards() {
         return mCards;
     }
 
-    public void setCards(ArrayList<CardData> cards) {
+    @Override
+    public void setCards(ArrayList<ICardData> cards) {
         mCards = cards;
     }
 }

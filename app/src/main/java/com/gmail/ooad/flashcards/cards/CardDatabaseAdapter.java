@@ -84,20 +84,17 @@ class CardDatabaseAdapter extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    /**
-     * @return packages with no card. You need to call getPackage explicitly to query its cards
-     */
-    @NonNull ArrayList<PackageData> getPackageList() {
-        ArrayList<PackageData> packages = new ArrayList<>();
+    @NonNull ArrayList<PackageDataProxy> getPackageList() {
         SQLiteDatabase db = getReadableDatabase();
 
         Cursor cursor = db.rawQuery("select * from " + PackagesTable, null);
 
+        ArrayList<PackageDataProxy> packages = new ArrayList<>();
         while (cursor.moveToNext()) {
             String name = cursor.getString(cursor.getColumnIndex(PackageName));
             int color = cursor.getInt(cursor.getColumnIndex(PackageColor));
 
-            PackageData data = new PackageData(name, color, null);
+            PackageDataProxy data = new PackageDataProxy(name, color);
 
             packages.add(data);
         }
@@ -107,7 +104,7 @@ class CardDatabaseAdapter extends SQLiteOpenHelper {
         return packages;
     }
 
-    PackageData getPackage(@NonNull String name) {
+    PackageDataProxy getPackage(@NonNull String name) {
         String where = PackageName + "=?";
         SQLiteDatabase db = getReadableDatabase();
 
@@ -119,22 +116,27 @@ class CardDatabaseAdapter extends SQLiteOpenHelper {
 
         cursor.close();
 
-        where = CardPackage + "=?";
-        cursor = db.query(CardsTable, null, where,
+        db.close();
+        return new PackageDataProxy(name, color);
+    }
+
+    ArrayList<CardDataProxy> getPackageCards(@NonNull String name) {
+        SQLiteDatabase db = getReadableDatabase();
+
+        String where = CardPackage + "=?";
+        Cursor cursor = db.query(CardsTable, new String[]{CardName}, where,
                 new String[]{name}, null, null, null);
-        ArrayList<CardData> cards = new ArrayList<>();
+        ArrayList<CardDataProxy> cards = new ArrayList<>();
 
         while (cursor.moveToNext()) {
             String cardName = cursor.getString(cursor.getColumnIndex(CardName));
-            String cardFront = cursor.getString(cursor.getColumnIndex(CardFront));
-            String cardBack = cursor.getString(cursor.getColumnIndex(CardBack));
 
-            cards.add(new CardData(cardName, cardFront, cardBack));
+            cards.add(new CardDataProxy(name, cardName));
         }
 
         cursor.close();
-        db.close();
-        return new PackageData(name, color, cards);
+
+        return cards;
     }
 
     CardData getCard(@NonNull String packageName, @NonNull String cardName) {
@@ -153,7 +155,7 @@ class CardDatabaseAdapter extends SQLiteOpenHelper {
         return new CardData(cardName, cardFront, cardBack);
     }
 
-    boolean addPackage(@NonNull PackageData packageData) {
+    boolean addPackage(@NonNull IPackageData packageData) {
         if (hasPackage(packageData.getName())) {
             return false;
         }
@@ -166,9 +168,9 @@ class CardDatabaseAdapter extends SQLiteOpenHelper {
         if (!success) {
             return false;
         }
-        ArrayList<CardData> cards = packageData.getCards();
+        ArrayList<ICardData> cards = packageData.getCards();
         if (cards != null) {
-            for (CardData card :
+            for (ICardData card :
                     cards) {
                 success &= addCard(packageData.getName(), card);
             }
@@ -177,7 +179,7 @@ class CardDatabaseAdapter extends SQLiteOpenHelper {
         return success;
     }
 
-    boolean addCard(@NonNull String packageName, @NonNull CardData cardData) {
+    boolean addCard(@NonNull String packageName, @NonNull ICardData cardData) {
         if (hasCard(packageName, cardData.getName())) {
             return false;
         }
@@ -199,7 +201,7 @@ class CardDatabaseAdapter extends SQLiteOpenHelper {
      *
      * @param oldPackageName - if null, the name remains unchanged
      */
-    boolean updatePackage(@NonNull PackageData packageData, @Nullable String oldPackageName) {
+    boolean updatePackage(@NonNull IPackageData packageData, @Nullable String oldPackageName) {
         String newPackageName = packageData.getName();
         boolean newNameQuarried = oldPackageName != null && !newPackageName.equals(oldPackageName);
 
@@ -242,7 +244,7 @@ class CardDatabaseAdapter extends SQLiteOpenHelper {
      *
      * @param oldCardName - if null, the name remains unchanged
      */
-    boolean updateCard(@NonNull String packageName, @NonNull CardData cardData,
+    boolean updateCard(@NonNull String packageName, @NonNull ICardData cardData,
                        @Nullable String oldCardName) {
 
         String newCardName = cardData.getName();

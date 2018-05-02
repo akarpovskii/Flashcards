@@ -18,12 +18,16 @@ public class CardController {
         mCardDatabase = new CardDatabaseAdapter(ApplicationContext.GetInstance().getApplicationContext());
     }
 
-    public static @NonNull ArrayList<PackageData> GetPackageList() {
+    public static @NonNull ArrayList<PackageDataProxy> GetPackageList() {
         return mCardDatabase.getPackageList();
     }
 
-    public static PackageData GetPackage(@NonNull String name) {
+    public static PackageDataProxy GetPackage(@NonNull String name) {
         return mCardDatabase.getPackage(name);
+    }
+
+    public static ArrayList<CardDataProxy> GetPackageCards(@NonNull String name) {
+        return mCardDatabase.getPackageCards(name);
     }
 
     public static CardData GetCard(@NonNull String packageName, @NonNull String cardName) {

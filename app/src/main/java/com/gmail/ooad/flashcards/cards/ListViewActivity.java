@@ -42,8 +42,8 @@ public abstract class ListViewActivity extends AppCompatActivity
 
     protected ActionBarDrawerToggle mDrawerToggle;
 
-    // request codes for intents
-//    protected static final int SyncList = 100;
+    // We need this for show/hide options dynamically (see switchListMode method)
+    Menu mMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +112,6 @@ public abstract class ListViewActivity extends AppCompatActivity
         return true;
     }
 
-    Menu mMenu;
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // there is a space in orderInCategory in case we want to manage it. See list_view_menu.xml
@@ -125,7 +124,6 @@ public abstract class ListViewActivity extends AppCompatActivity
                 break;
             case Selection:
                 menu.findItem(R.id.action_edit).setVisible(true);
-//                menu.findItem(R.id.action_edit).setVisible(mSelected.size() == 1);
                 menu.findItem(R.id.action_delete).setVisible(true);
                 menu.findItem(R.id.action_settings).setVisible(false);
                 break;
@@ -135,12 +133,7 @@ public abstract class ListViewActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        switch (id) {
+        switch (item.getItemId()) {
             case R.id.action_settings:
                 return true;
             case R.id.action_edit:
@@ -196,7 +189,7 @@ public abstract class ListViewActivity extends AppCompatActivity
 
     abstract protected int getColorAccent();
 
-    private void switchListMode() {
+    protected void switchListMode() {
         final ListView recordsList = findViewById(R.id.recordList);
 
         mListMode = mListMode == ListMode.View ? ListMode.Selection : ListMode.View;
@@ -235,6 +228,10 @@ public abstract class ListViewActivity extends AppCompatActivity
                             view.setBackgroundColor(getColorAccent());
                         }
 
+                        if (mSelected.size() == 0) {
+                            switchListMode();
+                        }
+
                         mMenu.findItem(R.id.action_edit).setVisible(mSelected.size() == 1);
                     }
                 });
@@ -258,7 +255,7 @@ public abstract class ListViewActivity extends AppCompatActivity
         }
     }
 
-    private void switchOptionsMenu() {
+    protected void switchOptionsMenu() {
         ActionBar bar = getSupportActionBar();
 
         switch (mListMode) {

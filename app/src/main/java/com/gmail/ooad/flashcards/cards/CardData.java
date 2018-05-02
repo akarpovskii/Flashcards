@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
  * Created by akarpovskii on 14.04.18.
  */
 
-public class CardData {
+public class CardData implements ICardData {
     private String mName;
 
     private String mFront;
@@ -20,27 +20,32 @@ public class CardData {
         mBack = back;
     }
 
-
+    @Override
     public String getName() {
         return mName;
     }
 
+    @Override
     public void setName(String name) {
         mName = name;
     }
 
+    @Override
     public String getFront() {
         return mFront;
     }
 
+    @Override
     public void setFront(String front) {
         mFront = front;
     }
 
+    @Override
     public String getBack() {
         return mBack;
     }
 
+    @Override
     public void setBack(String back) {
         mBack = back;
     }

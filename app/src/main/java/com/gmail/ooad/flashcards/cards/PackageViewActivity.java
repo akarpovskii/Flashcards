@@ -3,10 +3,11 @@ package com.gmail.ooad.flashcards.cards;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.widget.Toast;
 
 import com.gmail.ooad.flashcards.R;
 import com.gmail.ooad.flashcards.utils.ColorUtil;
+
+import java.util.ArrayList;
 
 
 public class PackageViewActivity extends ListViewActivity {
@@ -16,6 +17,8 @@ public class PackageViewActivity extends ListViewActivity {
     protected String mName;
 
     protected int mColor;
+
+    protected ArrayList<ICardData> mCards = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +51,12 @@ public class PackageViewActivity extends ListViewActivity {
     @Override
     protected void syncListWitchDatabase() {
         mRecordAdapter.clear();
+        mCards.clear();
 
-        PackageData pack = CardController.GetPackage(mName);
-        for (CardData card:
-                pack.getCards()) {
+        ArrayList<CardDataProxy> cards = CardController.GetPackageCards(mName);
+        mCards.addAll(cards);
+        for (ICardData card:
+                mCards) {
             mRecordAdapter.add(card.getName());
         }
     }
@@ -67,7 +72,7 @@ public class PackageViewActivity extends ListViewActivity {
     protected void onEditRecord() {
         String cardName = mRecordAdapter.getItem(mSelected.get(0));
         assert cardName != null;
-        CardData data = CardController.GetCard(mName, cardName);
+        ICardData data = mCards.get(mSelected.get(0));
 
         Intent intent = new Intent(this, EditCardActivity.class);
         intent.putExtra("package", mName);
@@ -91,9 +96,7 @@ public class PackageViewActivity extends ListViewActivity {
 
     @Override
     protected void onViewRecord(int position) {
-        String cardName = mRecordAdapter.getItem(position);
-        assert cardName != null;
-        CardData data = CardController.GetCard(mName, cardName);
+        ICardData data = mCards.get(position);
 
         Intent intent = new Intent(this, CardViewActivity.class);
         intent.putExtra("name", data.getName());

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:animateLayoutChanges="true">
+
+    <item
+        android:id="@+id/action_slide_show"
+        android:orderInCategory="95"
+        android:icon="@drawable/ic_slideshow_24dp"
+        android:title="@string/action_slide_show"
+        app:showAsAction="ifRoom" />
+
+</menu>

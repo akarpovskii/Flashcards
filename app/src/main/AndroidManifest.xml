@@ -30,7 +30,8 @@
         <activity android:name=".cards.PackageViewActivity" />
         <activity android:name=".cards.EditCardActivity" />
         <activity android:name=".cards.EditPackageActivity" />
-        <activity android:name=".cards.CardViewActivity"/>
+        <activity android:name=".cards.CardViewActivity" />
+        <activity android:name=".slideshow.SlideShowActivity"></activity>
     </application>
 
 </manifest>
