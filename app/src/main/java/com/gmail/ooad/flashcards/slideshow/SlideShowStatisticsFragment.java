@@ -18,10 +18,6 @@ public class SlideShowStatisticsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     */
     public static SlideShowStatisticsFragment NewInstance(SlideShowStatistics stat) {
         SlideShowStatisticsFragment fragment = new SlideShowStatisticsFragment();
         Bundle args = new Bundle();

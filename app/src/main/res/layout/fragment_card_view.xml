@@ -10,8 +10,7 @@
         android:id="@+id/card_back"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clickable="false"
-        android:focusable="false">
+        android:gravity="center">
         <include layout="@layout/fragment_card_back" />
     </FrameLayout>
 
@@ -19,8 +18,7 @@
         android:id="@+id/card_front"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:duplicateParentState="true">
+        android:gravity="center">
         <include layout="@layout/fragment_card_front" />
     </FrameLayout>
 

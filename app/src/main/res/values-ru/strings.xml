@@ -4,21 +4,30 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Настройки</string>
+    <string name="menu_action_settings">Настройки</string>
+    <string name="menu_action_edit">Редактирование</string>
+    <string name="menu_add_package_save">Сохранить</string>
+    <string name="menu_add_card_save">Сохранить</string>
+    <string name="menu_action_run_slide_show">Запустить Слайд-Шоу</string>
+    <string name="menu_action_delete">Удалить</string>
 
     <string name="activity_edit_card_title">Редактирование</string>
+    <string name="activity_add_package_title">Добавить набор</string>
+    <string name="activity_slide_show_title">Слайд-Шоу</string>
+
     <string name="edit_card_name_hint">Имя</string>
     <string name="edit_card_front_hint">Лицевая сторона</string>
     <string name="edit_card_back_hint">Обратная сторона</string>
-    <string name="menu_selection_edit">Редактирование</string>
 
-
-    <string name="activity_add_package_title">Добавить набор</string>
     <string name="add_package_name_hint">Имя</string>
     <string name="add_package_color_hint">Цвет</string>
-    <string name="menu_add_package_save">Сохранить</string>
-    <string name="add_card_label">Добавить карточку</string>
     <string name="add_package_label">Добавить набор</string>
-    <string name="menu_add_card_save">Сохранить</string>
-    <string name="card_background_desc">Фон</string>
+
+    <string name="add_card_label">Добавить карточку</string>
+
+    <string name="statistics_title">Результаты</string>
+    <string name="statistics_memorized_label">Запомненных:</string>
+
+    <string name="card_overlay_right_desc">Запомненная</string>
+    <string name="card_overlay_left_desc">Незапомненная</string>
 </resources>

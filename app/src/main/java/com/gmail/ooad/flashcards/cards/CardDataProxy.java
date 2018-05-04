@@ -1,5 +1,7 @@
 package com.gmail.ooad.flashcards.cards;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 public class CardDataProxy implements ICardData {
@@ -12,6 +14,24 @@ public class CardDataProxy implements ICardData {
     CardDataProxy(@NonNull String packageName, @NonNull String cardName) {
         mCardData = new CardData(cardName, null, null);
         mPackageName = packageName;
+    }
+
+    CardDataProxy(Parcel in) {
+        mCardData = new CardData(in);
+        mPackageName = in.readString();
+        mInited = in.readInt() == 1;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        mCardData.writeToParcel(dest, flags);
+        dest.writeString(mPackageName);
+        dest.writeInt(mInited ? 1 : 0);
     }
 
     private void init() {
@@ -65,4 +85,17 @@ public class CardDataProxy implements ICardData {
         }
         mCardData.setBack(back);
     }
+
+    public static final Parcelable.Creator<CardDataProxy> CREATOR =
+            new Parcelable.Creator<CardDataProxy>() {
+        @Override
+        public CardDataProxy createFromParcel(Parcel source) {
+            return new CardDataProxy(source);
+        }
+
+        @Override
+        public CardDataProxy[] newArray(int size) {
+            return new CardDataProxy[size];
+        }
+    };
 }

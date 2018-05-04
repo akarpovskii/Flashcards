@@ -4,29 +4,31 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="menu_action_settings">Settings</string>
+    <string name="menu_action_edit">Edit</string>
+    <string name="menu_add_package_save">Save</string>
+    <string name="menu_add_card_save">Save</string>
+    <string name="menu_action_run_slide_show">Slide show</string>
+    <string name="menu_action_delete">Delete</string>
 
     <string name="activity_edit_card_title">Edit</string>
+    <string name="activity_add_package_title">Add package</string>
+    <string name="activity_slide_show_title">Slide Show</string>
+
     <string name="edit_card_name_hint">Name</string>
     <string name="edit_card_front_hint">Front</string>
     <string name="edit_card_back_hint">Back</string>
-    <string name="menu_selection_edit">Edit</string>
 
-
-    <string name="activity_add_package_title">Add package</string>
     <string name="add_package_name_hint">Name</string>
     <string name="add_package_color_hint">Color</string>
-    <string name="menu_add_package_save">Save</string>
-    <string name="add_card_label">Add card</string>
     <string name="add_package_label">Add package</string>
-    <string name="menu_add_card_save">Save</string>
-    <string name="card_background_desc">Background</string>
-    <string name="slideshow_bg_memorized_desc">Memorized background</string>
-    <string name="slideshow_bg_unmemorized_desc">Unmemorized background</string>
-    <string name="activity_slide_show_title">Slide Show</string>
-    <string name="action_slide_show">Slide show</string>
+
+    <string name="add_card_label">Add card</string>
+
     <string name="statistics_title">Total</string>
     <string name="statistics_memorized_label">Memorized:</string>
     <string name="statistics_delimiter">/</string>
-    <string name="slideshow_bg_statistics_desc">Statistics bg</string>
+
+    <string name="card_overlay_right_desc">Memorized</string>
+    <string name="card_overlay_left_desc">Unmemorized</string>
 </resources>

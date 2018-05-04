@@ -99,9 +99,7 @@ public class PackageViewActivity extends ListViewActivity {
         ICardData data = mCards.get(position);
 
         Intent intent = new Intent(this, CardViewActivity.class);
-        intent.putExtra("name", data.getName());
-        intent.putExtra("front", data.getFront());
-        intent.putExtra("back", data.getBack());
+        intent.putExtra("card", data);
         intent.putExtra("color", mColor);
         startActivityForResult(intent, SyncList);
     }
@@ -109,5 +107,13 @@ public class PackageViewActivity extends ListViewActivity {
     @Override
     protected int getColorAccent() {
         return ColorUtil.darken(mColor, 20);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        Intent intent = new Intent();
+        setResult(RESULT_OK, intent);
     }
 }

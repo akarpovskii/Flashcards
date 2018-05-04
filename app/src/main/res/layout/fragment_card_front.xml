@@ -1,38 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_front_cardView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_margin="16dp"
+    card_view:cardCornerRadius="16dp"
+    card_view:cardElevation="8dp"
+    card_view:cardUseCompatPadding="true"
+    card_view:contentPadding="8dp"
+    card_view:cardPreventCornerOverlap="true"
+    card_view:cardBackgroundColor="@color/colorPrimary">
 
-    <ImageView
-        android:id="@+id/bg_front"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:tint="@color/colorPrimary"
-        android:padding="16dp"
-        android:src="@drawable/rectangle_card_bg"
-        android:contentDescription="@string/card_background_desc" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_centerVertical="true">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="24dp">
-
-        <ScrollView
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/text_front"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_centerVertical="true">
+            android:textSize="@dimen/font_size"
+            android:textColor="@android:color/black"
+            android:gravity="center" />
 
-            <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/text_front"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/font_size"
-                android:textColor="@android:color/black"
-                android:gravity="center" />
+    </ScrollView>
 
-        </ScrollView>
-
-    </RelativeLayout>
-
-</FrameLayout>
+</android.support.v7.widget.CardView>

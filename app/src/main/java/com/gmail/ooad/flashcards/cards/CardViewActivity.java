@@ -17,9 +17,7 @@ public class CardViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_card_view);
 
         Intent intent = getIntent();
-        String name = intent.getStringExtra("name");
-        String back = intent.getStringExtra("back");
-        String front = intent.getStringExtra("front");
+        ICardData card = intent.getParcelableExtra("card");
         int color = intent.getIntExtra("color", getResources().getColor(R.color.colorPrimary));
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -33,13 +31,13 @@ public class CardViewActivity extends AppCompatActivity {
             bar.setDisplayHomeAsUpEnabled(true);
         }
 
-        setTitle(name);
+        setTitle(card.getName());
 
 
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.container, CardViewFragment.NewInstance(color, front, back))
+                    .add(R.id.container, CardViewFragment.NewInstance(color, card))
                     .commit();
         }
     }

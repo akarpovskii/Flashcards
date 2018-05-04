@@ -4,6 +4,7 @@
     <color name="colorPrimary">#ffc107</color>
     <color name="colorPrimaryDark">#ffa000</color>
     <color name="colorAccent">#ff6f00</color>
-    <color name="colorMemorized">#4caf50</color>
-    <color name="colorUnmemorized">#F44336</color>
+    <color name="colorMemorized">@android:color/holo_green_light</color>
+    <color name="colorUnmemorized">@android:color/holo_red_light</color>
+    <color name="card_overlay_bg_color">#88000000</color>
 </resources>

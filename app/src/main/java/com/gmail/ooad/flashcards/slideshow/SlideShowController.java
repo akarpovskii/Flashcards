@@ -16,27 +16,30 @@ import java.util.Collections;
  * Created by akarpovskii on 30.04.18.
  */
 public class SlideShowController {
-    static private ArrayList<Pair<ICardData, Integer>> mCards;
-
     static private SlideShowStatistics mStatistics;
 
-    static private int mCurrent;
-
     public static void StartSlideShow(@NonNull FragmentActivity context, @NonNull final ArrayList<IPackageData> packages) {
-        mCards = new ArrayList<>();
+        ArrayList<Pair<Integer, ICardData>> pairs = new ArrayList<>();
         for (IPackageData pack :
                 packages) {
             for (ICardData card :
                     pack.getCards()) {
-                mCards.add(new Pair<>(card, pack.getColor()));
+                pairs.add(new Pair<>(pack.getColor(), card));
             }
         }
 
-        Collections.shuffle(mCards);
+        Collections.shuffle(pairs);
 
         mStatistics = new SlideShowStatistics();
-        mCurrent = -1;
         Intent intent = new Intent(context, SlideShowActivity.class);
+        ICardData[] cards = new ICardData[pairs.size()];
+        int[] colors = new int[pairs.size()];
+        for (int i = 0; i < cards.length; ++i) {
+            cards[i] = pairs.get(i).second;
+            colors[i] = pairs.get(i).first;
+        }
+        intent.putExtra("cards", cards);
+        intent.putExtra("colors", colors);
         context.startActivity(intent);
     }
 
@@ -48,25 +51,7 @@ public class SlideShowController {
         mStatistics.incUnmemorized();
     }
 
-    /**
-     *
-     * @return <cardData, color>
-     */
-    static @Nullable
-    Pair<ICardData, Integer> GetNextCard() {
-        ++mCurrent;
-        return HasNextCard() ? mCards.get(mCurrent) : null;
-    }
-
     static @NonNull SlideShowStatistics GetStatistics() {
         return mStatistics;
-    }
-
-    public static int GetCount() {
-        return mCards.size();
-    }
-
-    private static boolean HasNextCard() {
-        return mCurrent < mCards.size();
     }
 }

@@ -7,7 +7,7 @@
         android:id="@+id/action_slide_show"
         android:orderInCategory="95"
         android:icon="@drawable/ic_slideshow_24dp"
-        android:title="@string/action_slide_show"
+        android:title="@string/menu_action_run_slide_show"
         app:showAsAction="ifRoom" />
 
 </menu>
