@@ -4,12 +4,27 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="menu_action_settings">Settings</string>
     <string name="menu_action_edit">Edit</string>
     <string name="menu_add_package_save">Save</string>
     <string name="menu_add_card_save">Save</string>
     <string name="menu_action_run_slide_show">Slide show</string>
+    <string name="menu_action_share">Share</string>
+
     <string name="menu_action_delete">Delete</string>
+    <string name="menu_action_delete_message_pre">Are you sure you want to delete</string>
+    <string name="menu_action_delete_packages_title">Delete packages?</string>
+    <string name="menu_action_delete_cards_packages_message_post_singular">package with all the cards in it?</string>
+    <string name="menu_action_delete_cards_packages_message_post_plural">packages with all the cards in them?</string>
+    <string name="menu_action_delete_cards_message_post_singular">card?</string>
+    <string name="menu_action_delete_cards_message_post_plural">cards?</string>
+
+    <string name="menu_action_delete_symbols_packages_message_post_singular">package with all the symbols in it?</string>
+    <string name="menu_action_delete_symbols_packages_message_post_plural">packages with all the symbols in them?</string>
+    <string name="menu_action_delete_symbols_message_post_singular">symbol?</string>
+    <string name="menu_action_delete_symbols_message_post_plural">symbols?</string>
+
+    <string name="menu_action_delete_button_yes">Yes</string>
+    <string name="menu_action_delete_button_no">No</string>
 
     <string name="activity_edit_card_title">Edit</string>
     <string name="activity_add_package_title">Add package</string>
@@ -19,7 +34,7 @@
     <string name="edit_card_front_hint">Front</string>
     <string name="edit_card_back_hint">Back</string>
 
-    <string name="add_package_name_hint">Name</string>
+    <string name="add_cards_package_name_hint">Name</string>
     <string name="add_package_color_hint">Color</string>
     <string name="add_package_label">Add package</string>
 
@@ -31,4 +46,23 @@
 
     <string name="card_overlay_right_desc">Memorized</string>
     <string name="card_overlay_left_desc">Unmemorized</string>
+    <string name="editable_list_view_drawer_cards">Cards</string>
+    <string name="editable_list_view_drawer_symbols">Symbols</string>
+    <string name="editable_list_view_drawer_settings">Settings</string>
+    <string name="add_symbols_package_name_hint">Name</string>
+    <string name="add_symbol_hint">Symbol</string>
+    <string name="add_symbols_package_title">Add package</string>
+    <string name="add_symbol_title">Add symbol</string>
+    <string name="confirm">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_symbol_message">Are you sure you want to delete the symbol?</string>
+    <string name="symbols_title">Symbols</string>
+    <string name="example_cards_package_title">This is a package</string>
+    <string name="example_card_name">This is a card</string>
+    <string name="example_card_front">Front side\n(click on me)</string>
+    <string name="example_card_back">Back side</string>
+    <string name="example_symbols_math_title">Math</string>
+    <string name="example_symbols_math_symbols">⇒→⇔∧∨¬∀∃|∅∈∉⊆⊂⊇⊃∪⋂ℕℤℚℝℂ≈≤≥√∞∑∏∫∂↦°αβγδεζηθικλμνξοπρσςτυφχψωΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ</string>
+    <string name="example_symbols_chem_title">Chem</string>
+    <string name="example_symbols_chem_symbols">⁰¹²³⁴⁵⁶⁷⁸⁹₁₂₃₄₅₆₇₈₉</string>
 </resources>

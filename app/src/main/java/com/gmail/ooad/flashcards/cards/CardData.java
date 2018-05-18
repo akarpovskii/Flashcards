@@ -16,13 +16,13 @@ public class CardData implements ICardData {
 
     private String mBack;
 
-    CardData(@NonNull String name, @Nullable String front, @Nullable String back) {
+    public CardData(@NonNull String name, @Nullable String front, @Nullable String back) {
         mName = name;
         mFront = front;
         mBack = back;
     }
 
-    CardData(Parcel in) {
+    public CardData(Parcel in) {
         String[] data = new String[3];
         in.readStringArray(data);
         mName = data[0];

@@ -17,6 +17,4 @@ public interface ICardData extends Parcelable {
     String getBack();
 
     void setBack(String back);
-
-
 }

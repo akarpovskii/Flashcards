@@ -2,12 +2,11 @@ package com.gmail.ooad.flashcards.slideshow;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.util.Pair;
 
 import com.gmail.ooad.flashcards.cards.ICardData;
-import com.gmail.ooad.flashcards.cards.IPackageData;
+import com.gmail.ooad.flashcards.cards.ICardsPackageData;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,11 +15,20 @@ import java.util.Collections;
  * Created by akarpovskii on 30.04.18.
  */
 public class SlideShowController {
-    static private SlideShowStatistics mStatistics;
+    private static SlideShowController mInstance;
 
-    public static void StartSlideShow(@NonNull FragmentActivity context, @NonNull final ArrayList<IPackageData> packages) {
+    private SlideShowStatistics mStatistics;
+
+    public static synchronized SlideShowController GetInstance() {
+        if (mInstance == null) {
+            mInstance = new SlideShowController();
+        }
+        return mInstance;
+    }
+
+    public void startSlideShow(@NonNull FragmentActivity context, @NonNull final ArrayList<ICardsPackageData> packages) {
         ArrayList<Pair<Integer, ICardData>> pairs = new ArrayList<>();
-        for (IPackageData pack :
+        for (ICardsPackageData pack :
                 packages) {
             for (ICardData card :
                     pack.getCards()) {
@@ -43,15 +51,15 @@ public class SlideShowController {
         context.startActivity(intent);
     }
 
-    static void MarkAsMemorized() {
+    void markAsMemorized() {
         mStatistics.incMemorized();
     }
 
-    static void MarkAsUnmemorized() {
+    void markAsUnmemorized() {
         mStatistics.incUnmemorized();
     }
 
-    static @NonNull SlideShowStatistics GetStatistics() {
+    @NonNull SlideShowStatistics getStatistics() {
         return mStatistics;
     }
 }

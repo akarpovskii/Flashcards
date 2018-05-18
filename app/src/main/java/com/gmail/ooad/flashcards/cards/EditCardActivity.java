@@ -3,7 +3,6 @@ package com.gmail.ooad.flashcards.cards;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
-import android.support.v7.app.ActionBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,7 +13,7 @@ import com.gmail.ooad.flashcards.R;
  */
 public class EditCardActivity extends AddCardActivity {
 
-    protected String mName;
+    protected ICardData mCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,18 +21,13 @@ public class EditCardActivity extends AddCardActivity {
 
         Intent intent = getIntent();
 
-        mName = intent.getStringExtra("name");
-        assert mName != null;
-        String front = intent.getStringExtra("front");
-        assert front != null;
-        String back = intent.getStringExtra("back");
-        assert back != null;
+        mCard = intent.getParcelableExtra("card");
 
-        ((TextView)findViewById(R.id.card_name)).setText(mName);
-        ((TextView)findViewById(R.id.card_front)).setText(front);
-        ((TextView)findViewById(R.id.card_back)).setText(back);
+        ((TextView)findViewById(R.id.card_name)).setText(mCard.getName());
+        ((TextView)findViewById(R.id.card_front)).setText(mCard.getFront());
+        ((TextView)findViewById(R.id.card_back)).setText(mCard.getFront());
 
-        setTitle("Edit" + mName);
+        setTitle("Edit" + mCard.getName());
     }
 
     @Override
@@ -43,14 +37,26 @@ public class EditCardActivity extends AddCardActivity {
         CharSequence back = ((TextInputEditText)findViewById(R.id.card_back)).getText();
         CardData data = new CardData(name.toString(), front.toString(), back.toString());
 
-        if (CardController.UpdateCard(mPackage, data, mName)) {
+        if (name.length() == 0) {
+            Toast.makeText(getApplicationContext(),
+                    "Please, enter the name",
+                    Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if (CardsController.GetInstance().hasCard(mPackage, data.getName())) {
+            Toast.makeText(getApplicationContext(),
+                    "A card with this name already exists. Please, try another one",
+                    Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        String oldName = mCard.getName().equals(name.toString()) ? null : mCard.getName();
+        if (CardsController.GetInstance().updateCard(mPackage, data, oldName)) {
             Intent intent = new Intent();
             setResult(RESULT_OK, intent);
             return true;
         } else {
-            Toast.makeText(getApplicationContext(),
-                    "A card with this name already exists. Please, try another one",
-                    Toast.LENGTH_LONG).show();
             return false;
         }
     }

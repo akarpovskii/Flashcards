@@ -50,10 +50,10 @@ public class SlideShowActivity extends AppCompatActivity {
             public void onCardSwiped(SwipeDirection direction) {
                 switch (direction) {
                     case Left:
-                        SlideShowController.MarkAsUnmemorized();
+                        SlideShowController.GetInstance().markAsUnmemorized();
                         break;
                     case Right:
-                        SlideShowController.MarkAsMemorized();
+                        SlideShowController.GetInstance().markAsMemorized();
                         break;
                 }
 
@@ -94,7 +94,7 @@ public class SlideShowActivity extends AppCompatActivity {
 
     private void showStatistics() {
         cardStackView.setVisibility(View.GONE);
-        SlideShowStatistics statistics = SlideShowController.GetStatistics();
+        SlideShowStatistics statistics = SlideShowController.GetInstance().getStatistics();
         getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
@@ -107,13 +107,10 @@ public class SlideShowActivity extends AppCompatActivity {
         final ProgressBar progressBar = findViewById(R.id.slide_show_progress_bar);
         cardStackView.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                cardStackView.setAdapter(mAdapter);
-                cardStackView.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.GONE);
-            }
+        new Handler().postDelayed(() -> {
+            cardStackView.setAdapter(mAdapter);
+            cardStackView.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
         }, 1000);
     }
 

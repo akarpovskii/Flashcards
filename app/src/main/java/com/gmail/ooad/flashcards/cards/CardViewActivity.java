@@ -16,12 +16,12 @@ public class CardViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_view);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         Intent intent = getIntent();
         ICardData card = intent.getParcelableExtra("card");
         int color = intent.getIntExtra("color", getResources().getColor(R.color.colorPrimary));
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         getWindow().setStatusBarColor(color);
         toolbar.setBackgroundColor(color);
@@ -32,7 +32,6 @@ public class CardViewActivity extends AppCompatActivity {
         }
 
         setTitle(card.getName());
-
 
         if (savedInstanceState == null) {
             getSupportFragmentManager()

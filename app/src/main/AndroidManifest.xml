@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
-        android:name=".ApplicationContext"
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
-            android:name=".cards.PackageListActivity"
+            android:name=".cards.CardsPackagesListActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,13 +25,15 @@
             android:name=".cards.AddCardActivity"
             android:label="@string/add_card_label" />
         <activity
-            android:name=".cards.AddPackageActivity"
+            android:name=".cards.AddCardPackageActivity"
             android:label="@string/add_package_label" />
-        <activity android:name=".cards.PackageViewActivity" />
+        <activity android:name=".cards.CardsPackageViewActivity" />
         <activity android:name=".cards.EditCardActivity" />
-        <activity android:name=".cards.EditPackageActivity" />
+        <activity android:name=".cards.EditCardPackageActivity" />
         <activity android:name=".cards.CardViewActivity" />
         <activity android:name=".slideshow.SlideShowActivity" />
+        <activity android:name=".symbols.SymbolsPackagesListViewActivity" />
+        <activity android:name=".symbols.SymbolsPackageViewActivity"></activity>
     </application>
 
 </manifest>

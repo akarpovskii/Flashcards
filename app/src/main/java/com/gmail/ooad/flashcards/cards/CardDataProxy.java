@@ -35,7 +35,7 @@ public class CardDataProxy implements ICardData {
     }
 
     private void init() {
-        CardData data = CardController.GetCard(mPackageName, mCardData.getName());
+        CardData data = CardsController.GetInstance().getCard(mPackageName, mCardData.getName());
         mCardData.setFront(data.getFront());
         mCardData.setBack(data.getBack());
         mInited = true;

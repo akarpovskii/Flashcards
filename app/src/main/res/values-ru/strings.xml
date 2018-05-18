@@ -4,12 +4,27 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="menu_action_settings">Настройки</string>
     <string name="menu_action_edit">Редактирование</string>
     <string name="menu_add_package_save">Сохранить</string>
     <string name="menu_add_card_save">Сохранить</string>
     <string name="menu_action_run_slide_show">Запустить Слайд-Шоу</string>
+    <string name="menu_action_share">Поделиться</string>
+
     <string name="menu_action_delete">Удалить</string>
+    <string name="menu_action_delete_message_pre">Вы уверены, что хотите удалить</string>
+    <string name="menu_action_delete_packages_title">Удалить наборы?</string>
+    <string name="menu_action_delete_cards_packages_message_post_singular">набор со всеми содержащимися в нем карточками?</string>
+    <string name="menu_action_delete_cards_packages_message_post_plural">наборов со всеми содержащимися в них карточками?</string>
+    <string name="menu_action_delete_cards_message_post_singular">карточку?</string>
+    <string name="menu_action_delete_cards_message_post_plural">карточки?</string>
+
+    <string name="menu_action_delete_symbols_packages_message_post_singular">набор со всеми содержащимися в нем символами?</string>
+    <string name="menu_action_delete_symbols_packages_message_post_plural">наборов со всеми содержащимися в нем карточками?</string>
+    <string name="menu_action_delete_symbols_message_post_singular">символ?</string>
+    <string name="menu_action_delete_symbols_message_post_plural">символы?</string>
+
+    <string name="menu_action_delete_button_yes">Да</string>
+    <string name="menu_action_delete_button_no">Нет</string>
 
     <string name="activity_edit_card_title">Редактирование</string>
     <string name="activity_add_package_title">Добавить набор</string>
@@ -19,7 +34,7 @@
     <string name="edit_card_front_hint">Лицевая сторона</string>
     <string name="edit_card_back_hint">Обратная сторона</string>
 
-    <string name="add_package_name_hint">Имя</string>
+    <string name="add_cards_package_name_hint">Имя</string>
     <string name="add_package_color_hint">Цвет</string>
     <string name="add_package_label">Добавить набор</string>
 
@@ -28,6 +43,26 @@
     <string name="statistics_title">Результаты</string>
     <string name="statistics_memorized_label">Запомненных:</string>
 
+
     <string name="card_overlay_right_desc">Запомненная</string>
     <string name="card_overlay_left_desc">Незапомненная</string>
+    <string name="editable_list_view_drawer_cards">Карточки</string>
+    <string name="editable_list_view_drawer_symbols">Символы</string>
+    <string name="editable_list_view_drawer_settings">Настройки</string>
+    <string name="add_symbols_package_name_hint">Название</string>
+    <string name="add_symbol_hint">Символ</string>
+    <string name="add_symbols_package_title">Добавить набор</string>
+    <string name="add_symbol_title">Добавить символ</string>
+    <string name="confirm">ОК</string>
+    <string name="cancel">Отмена</string>
+    <string name="delete_symbol_message">Вы уверены, что хотите удалить символ?</string>
+    <string name="symbols_title">Символы</string>
+    <string name="example_cards_package_title">Это набор</string>
+    <string name="example_card_name">Это карточка</string>
+    <string name="example_card_front">Передняя сторона\n(нажми на меня)</string>
+    <string name="example_card_back">Задняя сторона</string>
+    <string name="example_symbols_math_title">Математика</string>
+    <string name="example_symbols_math_symbols">⇒→⇔∧∨¬∀∃|∅∈∉⊆⊂⊇⊃∪⋂ℕℤℚℝℂ≈≤≥√∞∑∏∫∂↦°αβγδεζηθικλμνξοπρσςτυφχψωΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ</string>
+    <string name="example_symbols_chem_title">Химия</string>
+    <string name="example_symbols_chem_symbols">⁰¹²³⁴⁵⁶⁷⁸⁹₁₂₃₄₅₆₇₈₉</string>
 </resources>

@@ -7,4 +7,5 @@
     <color name="colorMemorized">@android:color/holo_green_light</color>
     <color name="colorUnmemorized">@android:color/holo_red_light</color>
     <color name="card_overlay_bg_color">#88000000</color>
+    <color name="example_cards_package_color">#FF3f9fb2</color>
 </resources>

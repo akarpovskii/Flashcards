@@ -12,9 +12,17 @@ android {
     }
     buildTypes {
         release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
     }
 }
 
@@ -29,7 +37,10 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.pes.materialcolorpicker:library:1.2.0'
+    implementation 'com.android.support:support-emoji-bundled:27.1.1'
+
     implementation 'com.github.moonlightnvkz:CardStackView:-SNAPSHOT'
+    implementation 'com.github.moonlightnvkz:symbolsKeyboard:-SNAPSHOT'
 }
 
 configurations.all {

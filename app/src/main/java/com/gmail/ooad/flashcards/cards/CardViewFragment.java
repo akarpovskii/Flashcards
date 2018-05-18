@@ -21,9 +21,7 @@ import com.gmail.ooad.flashcards.R;
 public class CardViewFragment extends Fragment {
     private int mColor;
 
-    private String mFront;
-
-    private String mBack;
+    private ICardData mCard;
 
     private AnimatorSet mSetRightOut;
 
@@ -43,16 +41,11 @@ public class CardViewFragment extends Fragment {
 
     private TextView mTextFront;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     */
     public static CardViewFragment NewInstance(int color, ICardData card) {
         CardViewFragment fragment = new CardViewFragment();
         Bundle args = new Bundle();
         args.putInt("color", color);
-        args.putString("front", card.getFront());
-        args.putString("back", card.getBack());
+        args.putParcelable("card", card);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,8 +55,7 @@ public class CardViewFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mColor = getArguments().getInt("color");
-            mFront = getArguments().getString("front");
-            mBack = getArguments().getString("back");
+            mCard = getArguments().getParcelable("card");
         }
     }
 
@@ -84,7 +76,7 @@ public class CardViewFragment extends Fragment {
         ((CardView)mCardFrontLayout.findViewById(R.id.card_front_cardView)).setCardBackgroundColor(mColor);
 
         mTextFront = mCardFrontLayout.findViewById(R.id.text_front);
-        mTextFront.setText(mFront);
+        mTextFront.setText(mCard.getFront());
         // TextView catches events for some reason even with clickable=false
         // So we need to duplicate the onClick handler
         mTextFront.setOnTouchListener(new View.OnTouchListener() {
@@ -100,7 +92,7 @@ public class CardViewFragment extends Fragment {
         ((CardView)mCardBackLayout.findViewById(R.id.card_back_cardView)).setCardBackgroundColor(mColor);
 
         mTextBack = mCardBackLayout.findViewById(R.id.text_back);
-        mTextBack.setText(mBack);
+        mTextBack.setText(mCard.getBack());
         // TextView  catches events for some reason even with clickable=false.
         // So we need to duplicate the onClick handler
         mTextBack.setOnTouchListener(new View.OnTouchListener() {
@@ -157,16 +149,16 @@ public class CardViewFragment extends Fragment {
 
         @Override
         public void onAnimationStart(Animator animation) {
-            mCardFrame.setClickable(false);
-            mTextBack.setClickable(false);
-            mTextFront.setClickable(false);
+            mCardFrame.setEnabled(false);
+            mTextBack.setEnabled(false);
+            mTextFront.setEnabled(false);
         }
 
         @Override
         public void onAnimationEnd(Animator animation) {
-            mCardFrame.setClickable(true);
-            mTextFront.setClickable(true);
-            mTextBack.setClickable(true);
+            mCardFrame.setEnabled(true);
+            mTextFront.setEnabled(true);
+            mTextBack.setEnabled(true);
             if (mIsBackVisible) {
                 mCardBackLayout.bringToFront();
             } else {
@@ -176,9 +168,9 @@ public class CardViewFragment extends Fragment {
 
         @Override
         public void onAnimationCancel(Animator animation) {
-            mCardFrame.setClickable(true);
-            mTextFront.setClickable(true);
-            mTextBack.setClickable(true);
+            mCardFrame.setEnabled(true);
+            mTextFront.setEnabled(true);
+            mTextBack.setEnabled(true);
         }
 
         @Override
