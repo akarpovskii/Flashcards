@@ -35,9 +35,10 @@ public class AddCardActivity extends AppCompatActivity {
 
         ActionBar bar = getSupportActionBar();
         if (bar != null) {
-            bar.setTitle(R.string.activity_edit_card_title);
             bar.setDisplayHomeAsUpEnabled(true);
         }
+
+        setTitle(R.string.activity_add_card_title);
 
         Intent intent = getIntent();
         mPackage = intent.getStringExtra("package");
@@ -106,15 +107,14 @@ public class AddCardActivity extends AppCompatActivity {
 
         if (name.length() == 0) {
             Toast.makeText(getApplicationContext(),
-                    "Please, enter the name",
+                    R.string.error_enter_the_name,
                     Toast.LENGTH_LONG).show();
             return false;
         }
 
         if (CardsController.GetInstance().hasCard(mPackage, data.getName())) {
             Toast.makeText(getApplicationContext(),
-                    // FIXME
-                    "A card with this name already exists. Please, try another one",
+                    R.string.error_card_already_exists,
                     Toast.LENGTH_LONG).show();
             return false;
         }

@@ -26,7 +26,7 @@
     <string name="menu_action_delete_button_yes">Да</string>
     <string name="menu_action_delete_button_no">Нет</string>
 
-    <string name="activity_edit_card_title">Редактирование</string>
+    <string name="activity_add_card_title">Добавить карточку</string>
     <string name="activity_add_package_title">Добавить набор</string>
     <string name="activity_slide_show_title">Слайд-Шоу</string>
 
@@ -59,10 +59,14 @@
     <string name="symbols_title">Символы</string>
     <string name="example_cards_package_title">Это набор</string>
     <string name="example_card_name">Это карточка</string>
-    <string name="example_card_front">Передняя сторона\n(нажми на меня)</string>
+    <string name="example_card_front">"Передняя сторона\n(нажми на меня)"</string>
     <string name="example_card_back">Задняя сторона</string>
     <string name="example_symbols_math_title">Математика</string>
     <string name="example_symbols_math_symbols">⇒→⇔∧∨¬∀∃|∅∈∉⊆⊂⊇⊃∪⋂ℕℤℚℝℂ≈≤≥√∞∑∏∫∂↦°αβγδεζηθικλμνξοπρσςτυφχψωΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ</string>
     <string name="example_symbols_chem_title">Химия</string>
     <string name="example_symbols_chem_symbols">⁰¹²³⁴⁵⁶⁷⁸⁹₁₂₃₄₅₆₇₈₉</string>
+    <string name="error_enter_the_name">Пожалуйста, введите название</string>
+    <string name="error_card_already_exists">Карточка с таким именем уже существует.</string>
+    <string name="error_package_already_exists">Набор с таким именем уже существует.</string>
+    <string name="title_edit">Редактирование</string>
 </resources>

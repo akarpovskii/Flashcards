@@ -26,7 +26,7 @@
     <string name="menu_action_delete_button_yes">Yes</string>
     <string name="menu_action_delete_button_no">No</string>
 
-    <string name="activity_edit_card_title">Edit</string>
+    <string name="activity_add_card_title">Add card</string>
     <string name="activity_add_package_title">Add package</string>
     <string name="activity_slide_show_title">Slide Show</string>
 
@@ -59,10 +59,14 @@
     <string name="symbols_title">Symbols</string>
     <string name="example_cards_package_title">This is a package</string>
     <string name="example_card_name">This is a card</string>
-    <string name="example_card_front">Front side\n(click on me)</string>
+    <string name="example_card_front">"Front side\n(click on me)"</string>
     <string name="example_card_back">Back side</string>
     <string name="example_symbols_math_title">Math</string>
     <string name="example_symbols_math_symbols">⇒→⇔∧∨¬∀∃|∅∈∉⊆⊂⊇⊃∪⋂ℕℤℚℝℂ≈≤≥√∞∑∏∫∂↦°αβγδεζηθικλμνξοπρσςτυφχψωΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ</string>
     <string name="example_symbols_chem_title">Chem</string>
     <string name="example_symbols_chem_symbols">⁰¹²³⁴⁵⁶⁷⁸⁹₁₂₃₄₅₆₇₈₉</string>
+    <string name="error_enter_the_name">Please, enter the name</string>
+    <string name="error_card_already_exists">A card with this name already exists. Please, try another one</string>
+    <string name="error_package_already_exists">A package with this name already exists. Please, try another one</string>
+    <string name="title_edit">Edit</string>
 </resources>

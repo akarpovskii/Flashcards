@@ -5,8 +5,8 @@
 
     <item
         android:id="@+id/action_share"
-        android:orderInCategory="80"
+        android:orderInCategory="95"
         android:icon="@drawable/ic_share_24dp"
         android:title="@string/menu_action_share"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 </menu>

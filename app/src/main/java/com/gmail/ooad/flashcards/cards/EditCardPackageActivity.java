@@ -26,37 +26,33 @@ public class EditCardPackageActivity extends AddCardPackageActivity {
 
         ((TextView)findViewById(R.id.package_name)).setText(mPackage.getName());
         Button btn = findViewById(R.id.color_button);
+        mColor = mPackage.getColor();
         ((GradientDrawable)btn.getBackground()).setColor(mPackage.getColor());
 
-        setTitle("Edit" + mPackage.getName());
+        setTitle(getString(R.string.title_edit) + mPackage.getName());
     }
 
     @Override
     protected boolean onSavePackage() {
         CharSequence name = ((TextInputEditText)findViewById(R.id.package_name)).getText();
+
         CardsPackageData data = new CardsPackageData(name.toString(), mColor, null);
 
         if (name.length() == 0) {
             Toast.makeText(getApplicationContext(),
-                    "Please, enter the name",
-                    Toast.LENGTH_LONG).show();
-            return false;
-        }
-
-        if (CardsController.GetInstance().hasPackage(data.getName())) {
-            Toast.makeText(getApplicationContext(),
-                    "A package with this name already exists. Please, try another one",
+                    R.string.error_card_already_exists,
                     Toast.LENGTH_LONG).show();
             return false;
         }
 
         String oldName = mPackage.getName().equals(name.toString()) ? null : mPackage.getName();
+
         if (CardsController.GetInstance().updatePackage(data, oldName)) {
             Intent intent = new Intent();
             setResult(RESULT_OK, intent);
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 }

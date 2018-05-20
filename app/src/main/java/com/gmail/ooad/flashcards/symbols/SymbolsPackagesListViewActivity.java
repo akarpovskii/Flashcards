@@ -45,7 +45,11 @@ public class SymbolsPackagesListViewActivity extends ShareableEditableListViewAc
         }
     }
 
-    private void showAddDialog(final View view, final TextView nameView) {
+    @Override
+    protected void onAddRecord() {
+        View view = getLayoutInflater().inflate(R.layout.dialog_add_package_dialog, null);
+        final TextView nameView = view.findViewById(R.id.package_name);
+
         new AlertDialog.Builder(this)
                 .setTitle(getResources().getString(R.string.add_symbols_package_title))
                 .setView(view)
@@ -55,15 +59,14 @@ public class SymbolsPackagesListViewActivity extends ShareableEditableListViewAc
 
                     if (name.length() == 0) {
                         Toast.makeText(getApplicationContext(),
-                                "Please, enter the name",
+                                R.string.error_enter_the_name,
                                 Toast.LENGTH_LONG).show();
                         return;
                     }
 
                     if (SymbolsController.GetInstance().hasPackage(name)) {
                         Toast.makeText(getApplicationContext(),
-                                // FIXME
-                                "A package with this name already exists. Please, try another one",
+                                R.string.error_package_already_exists,
                                 Toast.LENGTH_LONG).show();
                     } else {
                         SymbolsController.GetInstance().addPackage(data);
@@ -75,21 +78,33 @@ public class SymbolsPackagesListViewActivity extends ShareableEditableListViewAc
     }
 
     @Override
-    protected void onAddRecord() {
-        View view = getLayoutInflater().inflate(R.layout.dialog_add_package_dialog, null);
-        final TextView nameView = view.findViewById(R.id.package_name);
-
-        showAddDialog(view, nameView);
-    }
-
-    @Override
     protected void onEditRecord() {
         View view = getLayoutInflater().inflate(R.layout.dialog_add_package_dialog, null);
         final TextView nameView = view.findViewById(R.id.package_name);
 
-        nameView.setText(mRecordAdapter.getItem(mSelected.get(0)));
+        final ISymbolsPackageData pack = mPackages.get(mSelected.get(0));
+        nameView.setText(pack.getName());
 
-        showAddDialog(view, nameView);
+        new AlertDialog.Builder(this)
+                .setTitle(getResources().getString(R.string.add_symbols_package_title))
+                .setView(view)
+                .setPositiveButton(R.string.confirm, (dialog, id) -> {
+                    String name = nameView.getText().toString();
+                    SymbolsPackageData data = new SymbolsPackageData(name, pack.getSymbols());
+
+                    if (name.length() == 0) {
+                        Toast.makeText(getApplicationContext(),
+                                R.string.error_enter_the_name,
+                                Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    String oldName = pack.getName();
+                    SymbolsController.GetInstance().updatePackage(data, oldName);
+                    syncListWitchDatabase();
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
     }
 
     @Override

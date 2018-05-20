@@ -25,9 +25,9 @@ public class EditCardActivity extends AddCardActivity {
 
         ((TextView)findViewById(R.id.card_name)).setText(mCard.getName());
         ((TextView)findViewById(R.id.card_front)).setText(mCard.getFront());
-        ((TextView)findViewById(R.id.card_back)).setText(mCard.getFront());
+        ((TextView)findViewById(R.id.card_back)).setText(mCard.getBack());
 
-        setTitle("Edit" + mCard.getName());
+        setTitle(getString(R.string.title_edit) + mCard.getName());
     }
 
     @Override
@@ -39,25 +39,19 @@ public class EditCardActivity extends AddCardActivity {
 
         if (name.length() == 0) {
             Toast.makeText(getApplicationContext(),
-                    "Please, enter the name",
-                    Toast.LENGTH_LONG).show();
-            return false;
-        }
-
-        if (CardsController.GetInstance().hasCard(mPackage, data.getName())) {
-            Toast.makeText(getApplicationContext(),
-                    "A card with this name already exists. Please, try another one",
+                    R.string.error_enter_the_name,
                     Toast.LENGTH_LONG).show();
             return false;
         }
 
         String oldName = mCard.getName().equals(name.toString()) ? null : mCard.getName();
+
         if (CardsController.GetInstance().updateCard(mPackage, data, oldName)) {
             Intent intent = new Intent();
             setResult(RESULT_OK, intent);
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 }

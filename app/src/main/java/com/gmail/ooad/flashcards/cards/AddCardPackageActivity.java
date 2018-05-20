@@ -31,21 +31,16 @@ public class AddCardPackageActivity extends AppCompatActivity {
 
         ActionBar bar = getSupportActionBar();
         if (bar != null) {
-            bar.setTitle(R.string.activity_add_package_title);
             bar.setDisplayHomeAsUpEnabled(true);
         }
+        setTitle(R.string.activity_add_package_title);
 
         mColor = getResources().getColor(R.color.colorPrimary);
 
         Button btn = findViewById(R.id.color_button);
         ((GradientDrawable)btn.getBackground()).setColor(mColor);
 
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pickColor();
-            }
-        });
+        btn.setOnClickListener(view -> pickColor());
     }
 
     @Override
@@ -76,14 +71,14 @@ public class AddCardPackageActivity extends AppCompatActivity {
 
         if (name.length() == 0) {
             Toast.makeText(getApplicationContext(),
-                    "Please, enter the name",
+                    R.string.error_enter_the_name,
                     Toast.LENGTH_LONG).show();
             return false;
         }
 
         if (CardsController.GetInstance().hasPackage(data.getName())) {
             Toast.makeText(getApplicationContext(),
-                    "A package with this name already exists. Please, try another one",
+                    R.string.error_package_already_exists,
                     Toast.LENGTH_LONG).show();
             return false;
         }
@@ -100,15 +95,11 @@ public class AddCardPackageActivity extends AppCompatActivity {
         final ColorPicker cp = new ColorPicker(AddCardPackageActivity.this,
                 Color.red(mColor), Color.green(mColor), Color.blue(mColor));
 
-        cp.setCallback(new ColorPickerCallback() {
-            @Override
-            public void onColorChosen(int color) {
-                mColor = color;
-                Button btn = findViewById(R.id.color_button);
-//                btn.setBackgroundColor(mColor);
-                ((GradientDrawable)btn.getBackground()).setColor(mColor);
-                cp.dismiss();
-            }
+        cp.setCallback(color -> {
+            mColor = color;
+            Button btn = findViewById(R.id.color_button);
+            ((GradientDrawable)btn.getBackground()).setColor(mColor);
+            cp.dismiss();
         });
 
         cp.show();
