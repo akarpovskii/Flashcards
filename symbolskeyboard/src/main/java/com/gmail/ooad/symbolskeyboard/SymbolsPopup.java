@@ -10,11 +10,9 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.PopupWindow;
 
 import com.gmail.ooad.symbolskeyboard.listeners.OnSoftKeyboardCloseListener;
@@ -23,6 +21,7 @@ import com.gmail.ooad.symbolskeyboard.listeners.OnSymbolBackspaceClickListener;
 import com.gmail.ooad.symbolskeyboard.listeners.OnSymbolClickListener;
 import com.gmail.ooad.symbolskeyboard.listeners.OnSymbolPopupDismissListener;
 import com.gmail.ooad.symbolskeyboard.listeners.OnSymbolPopupShownListener;
+import com.gmail.ooad.symbolskeyboard.model.IEditInterface;
 import com.gmail.ooad.symbolskeyboard.model.IRecentSymbolsManager;
 import com.gmail.ooad.symbolskeyboard.model.ISymbolsPackagesProvider;
 
@@ -37,7 +36,7 @@ public class SymbolsPopup {
 
     private final PopupWindow mPopupWindow;
     private final IRecentSymbolsManager mRecentSymbolsManager;
-    private EditText mEditInterface;
+    private IEditInterface mEditInterface;
 
     private boolean mIsPendingOpen;
     private boolean mIsKeyboardOpen;
@@ -92,7 +91,7 @@ public class SymbolsPopup {
     };
 
     SymbolsPopup(@NonNull final View rootView, ISymbolsPackagesProvider provider,
-                 @NonNull final EditText editInterface,
+                 @NonNull final IEditInterface editInterface,
                  @Nullable final IRecentSymbolsManager recentSymbolsManager) {
         mContext = Utils.asActivity(rootView.getContext());
         mRootView = rootView.getRootView();
@@ -110,7 +109,7 @@ public class SymbolsPopup {
 //        };
 
         final OnSymbolClickListener clickListener = (imageView, symbol) -> {
-            SymbolsPopup.this.mEditInterface.append(symbol.getUnicode());
+            SymbolsPopup.this.mEditInterface.input(symbol);
 
             mRecentSymbolsManager.addSymbol(symbol);
             if (mOnSymbolsClickListener != null) {
@@ -120,7 +119,8 @@ public class SymbolsPopup {
 
         final SymbolsView symbolView = new SymbolsView(mContext, provider, clickListener, null, mRecentSymbolsManager);
         symbolView.setOnSymbolBackspaceClickListener(v -> {
-            SymbolsPopup.this.mEditInterface.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
+            SymbolsPopup.this.mEditInterface.backspace();
+            // dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
 
             if (mOnSymbolsBackspaceClickListener != null) {
                 mOnSymbolsBackspaceClickListener.onSymbolBackspaceClick(v);
@@ -146,8 +146,8 @@ public class SymbolsPopup {
             if (mIsKeyboardOpen) {
                 // If the keyboard is visible, simply show the symbol popup.
                 showAtBottom();
-            } else if (mEditInterface != null) {
-                final View view = mEditInterface;
+            } else if (mEditInterface instanceof View) {
+                final View view = (View) mEditInterface;
 
                 // Open the text keyboard first and immediately after that show the symbol popup.
                 view.setFocusableInTouchMode(true);
@@ -198,7 +198,7 @@ public class SymbolsPopup {
         }
     }
 
-    public void setEditInterface(@NonNull final EditText editInterface) {
+    public void setEditInterface(@NonNull final IEditInterface editInterface) {
         this.mEditInterface = editInterface;
     }
 
@@ -256,7 +256,7 @@ public class SymbolsPopup {
         }
 
         @CheckResult public SymbolsPopup build(@NonNull final ISymbolsPackagesProvider provider,
-                                               @NonNull final EditText editInterface,
+                                               @NonNull final IEditInterface editInterface,
                                                @Nullable final IRecentSymbolsManager recentSymbolsManager) {
             final SymbolsPopup symbolPopup = new SymbolsPopup(rootView, provider, editInterface, recentSymbolsManager);
             symbolPopup.mOnSoftKeyboardCloseListener = onSoftKeyboardCloseListener;

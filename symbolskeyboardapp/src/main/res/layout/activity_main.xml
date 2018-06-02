@@ -34,7 +34,7 @@
             app:srcCompat="@android:drawable/arrow_up_float"
             tools:ignore="ContentDescription"/>
 
-        <EditText
+        <com.gmail.ooad.symbolskeyboardapp.EditTextEx
             android:id="@+id/main_activity_chat_bottom_message_edittext"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

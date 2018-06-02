@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.gmail.ooad.symbolkeyboard.R;
@@ -22,7 +21,7 @@ import com.gmail.ooad.symbolskeyboard.SymbolsPopup;
 
     SymbolsPopup emojiPopup;
 
-    EditText editText;
+    EditTextEx editText;
     ViewGroup rootView;
     ImageView emojiButton;
 

@@ -136,7 +136,7 @@ public class SimpleRecentSymbolsManager implements IRecentSymbolsManager {
         }
     }
 
-    static class Data {
+    private static class Data {
         final ISymbol symbol;
         final long timestamp;
 

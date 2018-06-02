@@ -44,9 +44,9 @@ public class AddCardActivity extends AppCompatActivity {
         mPackage = intent.getStringExtra("package");
         assert mPackage != null;
 
-        final TextInputEditText editName = findViewById(R.id.card_name);
-        final TextInputEditText editFront = findViewById(R.id.card_front);
-        final TextInputEditText editBack = findViewById(R.id.card_back);
+        final TextInputEditTextEx editName = findViewById(R.id.card_name);
+        final TextInputEditTextEx editFront = findViewById(R.id.card_front);
+        final TextInputEditTextEx editBack = findViewById(R.id.card_back);
 
         editName.setOnFocusChangeListener((v, hasFocus) -> mSymbolsPopup.setEditInterface(editName));
 
