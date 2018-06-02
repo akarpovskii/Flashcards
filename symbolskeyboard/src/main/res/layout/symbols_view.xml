@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:orientation="horizontal">
+
+        <com.ogaclejapan.smarttablayout.SmartTabLayout
+            android:id="@+id/symbols_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toStartOf="@id/symbols_backspace"
+            app:stl_defaultTabTextColor="@color/symbol_icons"
+            app:stl_defaultTabTextHorizontalPadding="@dimen/symbol_tab_text_horizontal_padding"
+            app:stl_indicatorColor="@color/symbol_icons"
+            app:stl_indicatorInterpolation="linear"
+            app:stl_indicatorThickness="3dp"
+            app:stl_indicatorCornerRadius="2dp"
+            app:stl_indicatorWidth="auto"
+            app:stl_underlineThickness="0dp"/>
+
+        <include
+            android:id="@+id/symbols_backspace"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            layout="@layout/symbols_category"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/symbol_divider"
+        />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/symbols_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+</merge>

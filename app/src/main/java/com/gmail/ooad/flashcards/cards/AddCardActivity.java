@@ -2,12 +2,12 @@ package com.gmail.ooad.flashcards.cards;
 
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.gmail.ooad.flashcards.R;
 import com.gmail.ooad.flashcards.symbols.KeyboardSymbolPackagesProvider;
-import com.gmail.ooad.symbolskeyboard.RecentSymbolsManager;
+import com.gmail.ooad.symbolskeyboard.SimpleRecentSymbolsManager;
 import com.gmail.ooad.symbolskeyboard.SymbolsPopup;
 
 public class AddCardActivity extends AppCompatActivity {
@@ -68,7 +68,7 @@ public class AddCardActivity extends AppCompatActivity {
                 .setOnSymbolsPopupDismissListener(() -> emojiButton.setImageResource(R.mipmap.ic_msg_panel_smiles))
                 .setOnSoftKeyboardCloseListener(() -> Log.d("Emoji", "Closed soft keyboard"))
                 .build(new KeyboardSymbolPackagesProvider(), editName,
-                        new RecentSymbolsManager(getApplicationContext()));
+                        new SimpleRecentSymbolsManager(getApplicationContext()));
     }
 
     @Override

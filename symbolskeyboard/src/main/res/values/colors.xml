@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="symbol_background">#eceff1</color>
+    <color name="symbol_icons">#71000000</color>
+    <color name="symbol">#BB000000</color>
+    <color name="symbol_divider">#18000000</color>
+    <color name="symbol_tab_background">#e2e7ea</color>
+</resources>
