@@ -7,6 +7,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gmail.ooad.flashcards.R;
+import com.gmail.ooad.flipablecardview.ICardData;
 
 /*
  * Created by akarpovskii on 27.04.18.

@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.gmail.ooad.flipablecardview.ICardData;
+
 public class CardDataProxy implements ICardData {
     private boolean mInited = false;
 

@@ -40,9 +40,12 @@ dependencies {
     implementation 'com.android.support:support-emoji-bundled:27.1.1'
 
     implementation 'com.github.moonlightnvkz:CardStackView:-SNAPSHOT'
-    implementation 'com.github.moonlightnvkz:symbolsKeyboard:-SNAPSHOT'
+
+    implementation project(':flipablecardview')
+    implementation project(':symbolskeyboard')
+    // implementation 'com.github.moonlightnvkz:symbolsKeyboard:-SNAPSHOT'
 }
 
-configurations.all {
-    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-}
+//configurations.all {
+//    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+//}

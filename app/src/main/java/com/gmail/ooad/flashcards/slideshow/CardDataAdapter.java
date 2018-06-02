@@ -10,8 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 
-import com.gmail.ooad.flashcards.cards.CardViewFragment;
-import com.gmail.ooad.flashcards.cards.ICardData;
+import com.gmail.ooad.flipablecardview.CardViewFragment;
+import com.gmail.ooad.flipablecardview.ICardData;
+
 
 /*
  * Created by akarpovskii on 03.05.18.

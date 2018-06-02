@@ -1,4 +1,4 @@
-package com.gmail.ooad.flashcards.cards;
+package com.gmail.ooad.flipablecardview;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
@@ -15,8 +15,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.gmail.ooad.flashcards.R;
 
 public class CardViewFragment extends Fragment {
     private int mColor;
@@ -79,12 +77,7 @@ public class CardViewFragment extends Fragment {
         mTextFront.setText(mCard.getFront());
         // TextView catches events for some reason even with clickable=false
         // So we need to duplicate the onClick handler
-        mTextFront.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return mGestureDetector.onTouchEvent(event);
-            }
-        });
+        mTextFront.setOnTouchListener((v, event) -> mGestureDetector.onTouchEvent(event));
 
 
         // Back
@@ -95,22 +88,12 @@ public class CardViewFragment extends Fragment {
         mTextBack.setText(mCard.getBack());
         // TextView  catches events for some reason even with clickable=false.
         // So we need to duplicate the onClick handler
-        mTextBack.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return mGestureDetector.onTouchEvent(event);
-            }
-        });
+        mTextBack.setOnTouchListener((v, event) -> mGestureDetector.onTouchEvent(event));
         mCardBackLayout.setAlpha(0.0f);
 
 
         mCardFrame = view.findViewById(R.id.card_view_frame);
-        mCardFrame.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return mGestureDetector.onTouchEvent(event);
-            }
-        });
+        mCardFrame.setOnTouchListener((v, event) -> mGestureDetector.onTouchEvent(event));
 
         mSetRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(getContext(), R.animator.card_flip_out);
         mSetLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(getContext(), R.animator.card_flip_in);

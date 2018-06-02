@@ -5,8 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.util.Pair;
 
-import com.gmail.ooad.flashcards.cards.ICardData;
 import com.gmail.ooad.flashcards.cards.ICardsPackageData;
+import com.gmail.ooad.flipablecardview.ICardData;
 
 import java.util.ArrayList;
 import java.util.Collections;

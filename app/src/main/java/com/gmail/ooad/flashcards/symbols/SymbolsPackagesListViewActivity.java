@@ -1,6 +1,7 @@
 package com.gmail.ooad.flashcards.symbols;
 
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.TextView;
@@ -150,7 +151,7 @@ public class SymbolsPackagesListViewActivity extends ShareableEditableListViewAc
 
     @Override
     protected int getColorAccent() {
-        return getResources().getColor(R.color.colorAccent);
+        return ContextCompat.getColor(this,R.color.colorAccent);
     }
 
     @Override

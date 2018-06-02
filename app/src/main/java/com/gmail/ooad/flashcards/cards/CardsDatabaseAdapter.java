@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.gmail.ooad.flashcards.BuildConfig;
+import com.gmail.ooad.flipablecardview.ICardData;
 
 import java.util.ArrayList;
 

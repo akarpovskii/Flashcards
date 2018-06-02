@@ -1,13 +1,16 @@
 package com.gmail.ooad.flashcards.cards;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.gmail.ooad.flashcards.R;
+import com.gmail.ooad.flipablecardview.CardViewFragment;
+import com.gmail.ooad.flipablecardview.ICardData;
 
 public class CardViewActivity extends AppCompatActivity {
 
@@ -21,7 +24,7 @@ public class CardViewActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         ICardData card = intent.getParcelableExtra("card");
-        int color = intent.getIntExtra("color", getResources().getColor(R.color.colorPrimary));
+        int color = intent.getIntExtra("color", ContextCompat.getColor(this, R.color.colorDefault));
 
         getWindow().setStatusBarColor(color);
         toolbar.setBackgroundColor(color);

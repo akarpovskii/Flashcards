@@ -2,6 +2,8 @@ package com.gmail.ooad.flashcards.cards;
 
 import android.os.Parcelable;
 
+import com.gmail.ooad.flipablecardview.ICardData;
+
 import java.util.ArrayList;
 
 /*

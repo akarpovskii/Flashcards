@@ -3,20 +3,19 @@ package com.gmail.ooad.flashcards.cards;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.gmail.ooad.flashcards.R;
 import com.pes.androidmaterialcolorpickerdialog.ColorPicker;
-import com.pes.androidmaterialcolorpickerdialog.ColorPickerCallback;
 
 public class AddCardPackageActivity extends AppCompatActivity {
     protected int mColor;
@@ -35,7 +34,7 @@ public class AddCardPackageActivity extends AppCompatActivity {
         }
         setTitle(R.string.activity_add_package_title);
 
-        mColor = getResources().getColor(R.color.colorPrimary);
+        mColor = ContextCompat.getColor(this, R.color.colorDefault);
 
         Button btn = findViewById(R.id.color_button);
         ((GradientDrawable)btn.getBackground()).setColor(mColor);

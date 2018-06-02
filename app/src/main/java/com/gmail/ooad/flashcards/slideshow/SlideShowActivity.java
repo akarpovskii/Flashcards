@@ -1,10 +1,10 @@
 package com.gmail.ooad.flashcards.slideshow;
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.view.MenuItem;
@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.gmail.ooad.flashcards.R;
-import com.gmail.ooad.flashcards.cards.ICardData;
+import com.gmail.ooad.flipablecardview.ICardData;
 import com.yuyakaido.android.cardstackview.CardStackView;
 import com.yuyakaido.android.cardstackview.SwipeDirection;
 

@@ -1,9 +1,8 @@
 package com.gmail.ooad.flashcards.cards;
 
-import android.support.v7.app.AlertDialog;
-//import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -12,6 +11,8 @@ import com.gmail.ooad.flashcards.slideshow.SlideShowController;
 import com.gmail.ooad.flashcards.utils.ShareableEditableListViewActivity;
 
 import java.util.ArrayList;
+
+//import android.app.AlertDialog;
 
 public class CardsPackagesListActivity extends ShareableEditableListViewActivity {
     // request codes for intents
@@ -132,7 +133,7 @@ public class CardsPackagesListActivity extends ShareableEditableListViewActivity
 
     @Override
     protected int getColorAccent() {
-        return getResources().getColor(R.color.colorAccent);
+        return ContextCompat.getColor(this, R.color.colorAccent);
     }
 
     @Override
