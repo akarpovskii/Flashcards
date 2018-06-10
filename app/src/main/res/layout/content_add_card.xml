@@ -73,6 +73,6 @@
         app:backgroundTint="@null"
         app:rippleColor="@null"
         app:fabSize="mini"
-        app:srcCompat="@mipmap/ic_msg_panel_smiles" />
+        app:srcCompat="@drawable/ic_translate_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>
