@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.gmail.ooad.flashcards.utils.ColorPalette;
 import com.gmail.ooad.flipablecardview.ICardData;
 
 import java.util.ArrayList;
@@ -16,19 +17,19 @@ import java.util.ArrayList;
 public class CardsPackageData implements ICardsPackageData {
     private String mName;
 
-    private int mColor;
+    private ColorPalette mPalette;
 
     private ArrayList<ICardData> mCards;
 
-    public CardsPackageData(@NonNull String name, int color, @Nullable ArrayList<ICardData> cards) {
+    public CardsPackageData(@NonNull String name, ColorPalette palette, @Nullable ArrayList<ICardData> cards) {
         mName = name;
-        mColor = color;
+        mPalette = palette;
         mCards = cards;
     }
 
     public CardsPackageData(Parcel in) {
         mName = in.readString();
-        mColor = in.readInt();
+        mPalette = ColorPalette.fromValue(in.readString());
         int size = in.readInt();
         if (size > 0) {
             mCards = new ArrayList<>(size);
@@ -44,7 +45,7 @@ public class CardsPackageData implements ICardsPackageData {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mName);
-        dest.writeInt(mColor);
+        dest.writeString(mPalette.toValue());
         if (mCards == null) {
             dest.writeInt(0);
         } else {
@@ -64,13 +65,13 @@ public class CardsPackageData implements ICardsPackageData {
     }
 
     @Override
-    public int getColor() {
-        return mColor;
+    public ColorPalette getPalette() {
+        return mPalette;
     }
 
     @Override
-    public void setColor(int color) {
-        mColor = color;
+    public void setPalette(ColorPalette palette) {
+        mPalette = palette;
     }
 
     @Override

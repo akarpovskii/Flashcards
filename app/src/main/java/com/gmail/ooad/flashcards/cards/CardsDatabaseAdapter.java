@@ -10,6 +10,8 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.gmail.ooad.flashcards.BuildConfig;
+import com.gmail.ooad.flashcards.utils.ColorPalette;
+import com.gmail.ooad.flashcards.utils.ColorUtil;
 import com.gmail.ooad.flipablecardview.ICardData;
 
 import java.util.ArrayList;
@@ -28,7 +30,7 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
 
     private static final String DatabaseName = "cards.db";
 
-    private static final int DatabaseVersion = 2;
+    private static final int DatabaseVersion = 3;
 
 
 
@@ -36,7 +38,9 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
 
     private static final String PackageName = "NAME";
 
-    private static final String PackageColor = "COLOR";
+    private static final String PackageColor_old = "COLOR";
+
+    private static final String PackagePalette = "PALETTE";
 
 
 
@@ -50,6 +54,18 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
 
     private static final String CardBack = "BACK";
 
+    private static final String CreatePackagesTable = "create table " + PackagesTable + "(" +
+            "ID integer primary key, " +
+            PackageName + " text not null," +
+            PackagePalette + " text not null);";
+
+    private static final String CreateCardsTable = "create table " + CardsTable + "(" +
+            "ID integer primary key, " +
+            CardPackage + " text not null," +
+            CardName + " text not null," +
+            CardFront + " text," +
+            CardBack + " text);";
+
     private final Context mContext;
 
     CardsDatabaseAdapter(Context context) {
@@ -60,19 +76,6 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         try {
-            final String CreatePackagesTable = "create table " + PackagesTable + "(" +
-                    "ID integer primary key, " +
-                    PackageName + " text not null," +
-                    PackageColor + " integer not null);";
-
-            final String CreateCardsTable = "create table " + CardsTable + "(" +
-                    "ID integer primary key, " +
-                    CardPackage + " text not null," +
-                    CardName + " text not null," +
-                    CardFront + " text," +
-                    CardBack + " text);";
-
-
             Log.i("Flashcards", "Creating cards database...");
             db.execSQL(CreatePackagesTable);
             db.execSQL(CreateCardsTable);
@@ -83,11 +86,35 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
         }
     }
 
-    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Should be appropriately changed before upgrade to a new version, or we will lose all the data
-        db.execSQL("drop table if exists " + PackagesTable);
-        db.execSQL("drop table if exists " + CardsTable);
-        onCreate(db);
+        if (oldVersion < 3) {
+            final String OldName = PackagesTable + "_old";
+            db.beginTransaction();
+
+            try {
+                db.execSQL("alter table " + PackagesTable + " rename to " + OldName + ";");
+                db.execSQL(CreatePackagesTable);
+
+                Cursor cursor = db.rawQuery("select * from " + OldName, null);
+
+                while (cursor.moveToNext()) {
+                    String name = cursor.getString(cursor.getColumnIndex(PackageName));
+                    int color = cursor.getColumnIndex(PackageColor_old);
+
+                    CardsPackageData data = new CardsPackageData(name, ColorUtil.GetNearest(color), null);
+                    addPackage(db, data);
+                }
+
+                cursor.close();
+
+                db.execSQL("drop table " + OldName + ";");
+
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
+            }
+        }
     }
 
     @NonNull ArrayList<CardsPackageDataProxy> getPackageList() {
@@ -98,9 +125,10 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
         ArrayList<CardsPackageDataProxy> packages = new ArrayList<>();
         while (cursor.moveToNext()) {
             String name = cursor.getString(cursor.getColumnIndex(PackageName));
-            int color = cursor.getInt(cursor.getColumnIndex(PackageColor));
+            ColorPalette palette = ColorPalette.fromValue(
+                    cursor.getString(cursor.getColumnIndex(PackagePalette)));
 
-            CardsPackageDataProxy data = new CardsPackageDataProxy(name, color);
+            CardsPackageDataProxy data = new CardsPackageDataProxy(name, palette);
 
             packages.add(data);
         }
@@ -114,16 +142,17 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
         String where = PackageName + "=?";
         SQLiteDatabase db = getReadableDatabase();
 
-        Cursor cursor = db.query(PackagesTable, new String[]{PackageColor}, where,
+        Cursor cursor = db.query(PackagesTable, new String[]{PackagePalette}, where,
                 new String[]{name}, null, null, null);
 
         cursor.moveToFirst();
-        int color = cursor.getInt(cursor.getColumnIndex(PackageColor));
+        ColorPalette palette = ColorPalette.fromValue(
+                cursor.getString(cursor.getColumnIndex(PackagePalette)));
 
         cursor.close();
 
         db.close();
-        return new CardsPackageDataProxy(name, color);
+        return new CardsPackageDataProxy(name, palette);
     }
 
     ArrayList<CardDataProxy> getPackageCards(@NonNull String name) {
@@ -167,7 +196,7 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
         }
         ContentValues values = new ContentValues();
         values.put(PackageName, packageData.getName());
-        values.put(PackageColor, packageData.getColor());
+        values.put(PackagePalette, packageData.getPalette().toValue());
 
         boolean success = db.insert(PackagesTable, null, values) != -1;
         if (success) {
@@ -227,7 +256,7 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
         if (newNameQuarried) {
             values.put(PackageName, newPackageName);
         }
-        values.put(PackageColor, packageData.getColor());
+        values.put(PackagePalette, packageData.getPalette().toValue());
 
         String where = PackageName + "=?";
 

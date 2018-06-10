@@ -1,7 +1,5 @@
 package com.gmail.ooad.flashcards.utils;
 
-import android.support.v4.graphics.ColorUtils;
-
 /**
  * A utility class for darkening and lightening colors in the same way as
  * material design color palettes
@@ -10,34 +8,52 @@ import android.support.v4.graphics.ColorUtils;
  */
 
 public class ColorUtil {
-
-    /**
-     * Darkens a given color
-     * @param base base color
-     * @param amount amount between 0 and 100
-     * @return darken color
-     */
-    public static int darken(int base, int amount) {
-        float[] hsl = new float[3];
-        ColorUtils.colorToHSL(base, hsl);
-        hsl[2] -= amount / 100f;
-        if (hsl[2] < 0)
-            hsl[2] = 0f;
-        return ColorUtils.HSLToColor(hsl);
+    static public ColorPalette[] GetAllPallettes() {
+        return new ColorPalette[] {
+                ColorPalette.RED,
+                ColorPalette.PINK,
+                ColorPalette.PURPLE,
+                ColorPalette.DEEP_PURPLE,
+                ColorPalette.INDIGO,
+                ColorPalette.BLUE,
+                ColorPalette.LIGHT_BLUE,
+                ColorPalette.CYAN,
+                ColorPalette.TEAL,
+                ColorPalette.GREEN,
+                ColorPalette.LIGHT_GREEN,
+                ColorPalette.LIME,
+                ColorPalette.YELLOW,
+                ColorPalette.AMBER,
+                ColorPalette.ORANGE,
+                ColorPalette.DEEP_ORANGE
+        };
     }
 
-    /**
-     * lightens a given color
-     * @param base base color
-     * @param amount amount between 0 and 100
-     * @return lightened
-     */
-    public static int lighten(int base, int amount) {
-        float[] hsl = new float[3];
-        ColorUtils.colorToHSL(base, hsl);
-        hsl[2] += amount / 100f;
-        if (hsl[2] > 1)
-            hsl[2] = 1f;
-        return ColorUtils.HSLToColor(hsl);
+    static public ColorPalette GetNearest(int color) {
+        final ColorPalette[] Palettes = GetAllPallettes();
+        ColorPalette nearest = ColorPalette.RED;
+        int min = 255*255 * 3;
+        for (ColorPalette palette:
+                Palettes){
+            int r = (color >> 16) & 0xff;
+            int g = (color >>  8) & 0xff;
+            int b = (color      ) & 0xff;
+
+            int  paletteColor = palette.getPrimary();
+            int paletteR = (paletteColor >> 16) & 0xff;
+            int paletteG = (paletteColor >>  8) & 0xff;
+            int paletteB = (paletteColor      ) & 0xff;
+
+            int distance = (paletteR - r) * (paletteR - r) +
+                    (paletteG - g) * (paletteG - g) +
+                    (paletteB - b) * (paletteB - b);
+
+            if (distance < min) {
+                min = distance;
+                nearest = palette;
+            }
+        }
+
+        return nearest;
     }
 }

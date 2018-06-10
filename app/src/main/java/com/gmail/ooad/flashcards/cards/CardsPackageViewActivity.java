@@ -6,7 +6,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 
 import com.gmail.ooad.flashcards.R;
-import com.gmail.ooad.flashcards.utils.ColorUtil;
 import com.gmail.ooad.flashcards.utils.EditableListViewActivity;
 import com.gmail.ooad.flipablecardview.ICardData;
 
@@ -27,8 +26,8 @@ public class CardsPackageViewActivity extends EditableListViewActivity {
         super.onCreate(savedInstanceState);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setBackgroundColor(mPackageData.getColor());
-        getWindow().setStatusBarColor(ColorUtil.darken(mPackageData.getColor(), 12));
+        toolbar.setBackgroundColor(mPackageData.getPalette().getPrimary());
+        getWindow().setStatusBarColor(mPackageData.getPalette().getPrimaryDark());
     }
 
     @Override
@@ -114,13 +113,13 @@ public class CardsPackageViewActivity extends EditableListViewActivity {
 
         Intent intent = new Intent(this, CardViewActivity.class);
         intent.putExtra("card", data);
-        intent.putExtra("color", mPackageData.getColor());
+        intent.putExtra("color", mPackageData.getPalette().getPrimary());
         startActivityForResult(intent, SyncList);
     }
 
     @Override
     protected int getColorAccent() {
-        return ColorUtil.darken(mPackageData.getColor(), 20);
+        return mPackageData.getPalette().getAccent();
     }
 
     @Override

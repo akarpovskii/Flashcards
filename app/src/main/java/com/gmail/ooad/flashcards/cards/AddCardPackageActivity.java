@@ -1,7 +1,6 @@
 package com.gmail.ooad.flashcards.cards;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
@@ -15,10 +14,13 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.gmail.ooad.flashcards.R;
-import com.pes.androidmaterialcolorpickerdialog.ColorPicker;
+import com.gmail.ooad.flashcards.utils.ColorPalette;
+import com.gmail.ooad.flashcards.utils.ColorUtil;
+import com.jaredrummler.android.colorpicker.ColorPickerDialog;
+import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
 
-public class AddCardPackageActivity extends AppCompatActivity {
-    protected int mColor;
+public class AddCardPackageActivity extends AppCompatActivity implements ColorPickerDialogListener {
+    protected ColorPalette mPalette;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +36,10 @@ public class AddCardPackageActivity extends AppCompatActivity {
         }
         setTitle(R.string.activity_add_package_title);
 
-        mColor = ContextCompat.getColor(this, R.color.colorDefault);
+        mPalette = ColorUtil.GetNearest(ContextCompat.getColor(this, R.color.colorDefault));
 
         Button btn = findViewById(R.id.color_button);
-        ((GradientDrawable)btn.getBackground()).setColor(mColor);
+        ((GradientDrawable)btn.getBackground()).setColor(mPalette.getPrimary());
 
         btn.setOnClickListener(view -> pickColor());
     }
@@ -66,7 +68,7 @@ public class AddCardPackageActivity extends AppCompatActivity {
 
     protected boolean onSavePackage() {
         CharSequence name = ((TextInputEditText)findViewById(R.id.package_name)).getText();
-        CardsPackageData data = new CardsPackageData(name.toString(), mColor, null);
+        CardsPackageData data = new CardsPackageData(name.toString(), mPalette, null);
 
         if (name.length() == 0) {
             Toast.makeText(getApplicationContext(),
@@ -91,16 +93,29 @@ public class AddCardPackageActivity extends AppCompatActivity {
     }
 
     private void pickColor() {
-        final ColorPicker cp = new ColorPicker(AddCardPackageActivity.this,
-                Color.red(mColor), Color.green(mColor), Color.blue(mColor));
+        final ColorPalette[] palettes = ColorUtil.GetAllPallettes();
+        int [] colors = new int[palettes.length];
+        for (int i = 0; i < palettes.length; ++i) {
+            colors[i] = palettes[i].getPrimary();
+        }
 
-        cp.setCallback(color -> {
-            mColor = color;
-            Button btn = findViewById(R.id.color_button);
-            ((GradientDrawable)btn.getBackground()).setColor(mColor);
-            cp.dismiss();
-        });
+        ColorPickerDialog.newBuilder()
+                .setAllowCustom(false)
+                .setPresets(colors)
+                .setColor(mPalette.getPrimary())
+                .setShowColorShades(false)
+                .show(this);
+    }
 
-        cp.show();
+    @Override
+    public void onColorSelected(int dialogId, int color) {
+        mPalette = ColorUtil.GetNearest(color);
+        Button btn = findViewById(R.id.color_button);
+        ((GradientDrawable)btn.getBackground()).setColor(mPalette.getPrimary());
+    }
+
+    @Override
+    public void onDialogDismissed(int dialogId) {
+        // do nothing
     }
 }

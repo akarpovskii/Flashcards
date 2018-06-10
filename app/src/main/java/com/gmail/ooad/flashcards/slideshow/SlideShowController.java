@@ -32,7 +32,7 @@ public class SlideShowController {
                 packages) {
             for (ICardData card :
                     pack.getCards()) {
-                pairs.add(new Pair<>(pack.getColor(), card));
+                pairs.add(new Pair<>(pack.getPalette().getPrimary(), card));
             }
         }
 

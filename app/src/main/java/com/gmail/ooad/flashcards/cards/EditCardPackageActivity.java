@@ -26,8 +26,8 @@ public class EditCardPackageActivity extends AddCardPackageActivity {
 
         ((TextView)findViewById(R.id.package_name)).setText(mPackage.getName());
         Button btn = findViewById(R.id.color_button);
-        mColor = mPackage.getColor();
-        ((GradientDrawable)btn.getBackground()).setColor(mPackage.getColor());
+        mPalette = mPackage.getPalette();
+        ((GradientDrawable)btn.getBackground()).setColor(mPalette.getPrimary());
 
         setTitle(getString(R.string.title_edit) + mPackage.getName());
     }
@@ -36,7 +36,7 @@ public class EditCardPackageActivity extends AddCardPackageActivity {
     protected boolean onSavePackage() {
         CharSequence name = ((TextInputEditText)findViewById(R.id.package_name)).getText();
 
-        CardsPackageData data = new CardsPackageData(name.toString(), mColor, null);
+        CardsPackageData data = new CardsPackageData(name.toString(), mPalette, null);
 
         if (name.length() == 0) {
             Toast.makeText(getApplicationContext(),
