@@ -42,7 +42,7 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
 
     private static final String PACKAGE_PALETTE = "PALETTE";
 
-    private static final String PACKAGE_CARDS_COLOR = "CARDS_ALPHA";    // leave the column name unchanged
+    private static final String PACKAGE_CARDS_COLOR = "CARDS_COLOR";
 
 
 
@@ -103,7 +103,7 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
 
                 while (cursor.moveToNext()) {
                     String name = cursor.getString(cursor.getColumnIndex(PACKAGE_NAME));
-                    int color = cursor.getColumnIndex(PACKAGE_COLOR_OLD);
+                    int color = cursor.getInt(cursor.getColumnIndex(PACKAGE_COLOR_OLD));
                     ColorPalette palette = ColorUtil.GetNearest(color);
 
                     CardsPackageData data = new CardsPackageData(name,
@@ -119,11 +119,6 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
             } finally {
                 db.endTransaction();
             }
-        }
-
-        if (oldVersion < 4) {
-            db.execSQL("alter table " + PACKAGES_TABLE +
-                    " add column " + PACKAGE_CARDS_COLOR + " integer default 255;");
         }
     }
 

@@ -1,5 +1,7 @@
 package com.gmail.ooad.flashcards.utils;
 
+import android.graphics.Color;
+
 /**
  * A utility class for darkening and lightening colors in the same way as
  * material design color palettes
@@ -48,21 +50,19 @@ public class ColorUtil {
     static public ColorPalette GetNearest(int color) {
         final ColorPalette[] Palettes = GetAllPallettes();
         ColorPalette nearest = ColorPalette.RED;
-        int min = 255*255 * 3;
+        float hsv[] = new float[3];
+        Color.colorToHSV(color, hsv);
+
+        float min = 360.f;
+
         for (ColorPalette palette:
                 Palettes){
-            int r = (color >> 16) & 0xff;
-            int g = (color >>  8) & 0xff;
-            int b = (color      ) & 0xff;
 
-            int  paletteColor = palette.getPrimary();
-            int paletteR = (paletteColor >> 16) & 0xff;
-            int paletteG = (paletteColor >>  8) & 0xff;
-            int paletteB = (paletteColor      ) & 0xff;
+            float paletteHSV[] = new float[3];
+            Color.colorToHSV(palette.getPrimary(), paletteHSV);
 
-            int distance = (paletteR - r) * (paletteR - r) +
-                    (paletteG - g) * (paletteG - g) +
-                    (paletteB - b) * (paletteB - b);
+            float diff = hsv[0] - paletteHSV[0];
+            float distance = Math.min(Math.abs(diff), Math.abs(360 - diff));
 
             if (distance < min) {
                 min = distance;

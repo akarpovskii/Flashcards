@@ -43,11 +43,9 @@ public class AddCardPackageActivity extends AppCompatActivity implements ColorPi
         mPalette = ColorUtil.GetNearest(ContextCompat.getColor(this, R.color.colorDefault));
 
         Button btn = findViewById(R.id.color_button);
-        ((GradientDrawable)btn.getBackground()).setColor(mPalette.getPrimary());
+        setColorButtonColor(mPalette.getPrimary());
 
         btn.setOnClickListener(view -> pickColor());
-
-        final Button alphaBtn = findViewById(R.id.cards_alpha_button);
 
         SeekBar seekBar = findViewById(R.id.cards_alpha_seekbar);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -55,8 +53,8 @@ public class AddCardPackageActivity extends AppCompatActivity implements ColorPi
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 mCardsColorInterpolation = progress;
 
-                ((GradientDrawable)alphaBtn.getBackground()).setColor(
-                        Interpolate(mPalette.getPrimary(), mCardsColorInterpolation / 100.f));
+                setCardsColorButtonColor(Interpolate(mPalette.getPrimary(),
+                        mCardsColorInterpolation / 100.f));
             }
 
             @Override
@@ -69,7 +67,7 @@ public class AddCardPackageActivity extends AppCompatActivity implements ColorPi
 
             }
         });
-        seekBar.setProgress(seekBar.getProgress()); // initialize the button color
+        seekBar.setProgress(seekBar.getMax()); // initialize the button color
     }
 
     @Override
@@ -97,7 +95,8 @@ public class AddCardPackageActivity extends AppCompatActivity implements ColorPi
     protected boolean onSavePackage() {
         CharSequence name = ((TextInputEditText)findViewById(R.id.package_name)).getText();
         CardsPackageData data = new CardsPackageData(name.toString(), new PackagePalette(mPalette,
-                Interpolate(mPalette.getPrimary(), mCardsColorInterpolation / 100.f)), null);
+                Interpolate(mPalette.getPrimary(),
+                        mCardsColorInterpolation / 100.f)), null);
 
         if (name.length() == 0) {
             Toast.makeText(getApplicationContext(),
@@ -139,8 +138,10 @@ public class AddCardPackageActivity extends AppCompatActivity implements ColorPi
     @Override
     public void onColorSelected(int dialogId, int color) {
         mPalette = ColorUtil.GetNearest(color);
-        Button btn = findViewById(R.id.color_button);
-        ((GradientDrawable)btn.getBackground()).setColor(mPalette.getPrimary());
+        setColorButtonColor(mPalette.getPrimary());
+
+        setCardsColorButtonColor(Interpolate(mPalette.getPrimary(),
+                mCardsColorInterpolation / 100.f));
     }
 
     @Override
@@ -159,5 +160,23 @@ public class AddCardPackageActivity extends AppCompatActivity implements ColorPi
         int green = (int) (ColorUtil.Green(color) * alpha + 0xff * (1 - alpha));
         int blue  = (int) (ColorUtil.Blue(color)  * alpha + 0xff * (1 - alpha));
         return Color.rgb(red, green, blue);
+    }
+
+    protected static float Deinterpolate(int baseColor, int interpolated) {
+        float alphaR = (float) (ColorUtil.Red(interpolated) - 0xff) / (ColorUtil.Red(baseColor) - 0xff);
+        float alphaG = (float) (ColorUtil.Green(interpolated) - 0xff) / (ColorUtil.Green(baseColor) - 0xff);
+        float alphaB = (float) (ColorUtil.Blue(interpolated) - 0xff) / (ColorUtil.Blue(baseColor) - 0xff);
+
+        return (float) Math.sqrt((alphaR*alphaR + alphaG*alphaG + alphaB*alphaB) / 3);
+    }
+
+    protected void setColorButtonColor(int color) {
+        Button btn = findViewById(R.id.color_button);
+        ((GradientDrawable)btn.getBackground()).setColor(color);
+    }
+
+    protected void setCardsColorButtonColor(int color) {
+        Button btn = findViewById(R.id.cards_alpha_button);
+        ((GradientDrawable)btn.getBackground()).setColor(color);
     }
 }

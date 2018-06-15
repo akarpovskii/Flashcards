@@ -33,7 +33,7 @@
         <activity android:name=".cards.CardViewActivity" />
         <activity android:name=".slideshow.SlideShowActivity" />
         <activity android:name=".symbols.SymbolsPackagesListViewActivity" />
-        <activity android:name=".symbols.SymbolsPackageViewActivity"></activity>
+        <activity android:name=".symbols.SymbolsPackageViewActivity"/>
     </application>
 
 </manifest>

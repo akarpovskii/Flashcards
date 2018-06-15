@@ -1,11 +1,8 @@
 package com.gmail.ooad.flashcards.cards;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
-import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,17 +26,16 @@ public class EditCardPackageActivity extends AddCardPackageActivity {
 
         setTitle(getString(R.string.title_edit) + mPackage.getName());
 
-        float hsv[] = new float[3];
-        Color.colorToHSV(mPackage.getPalette().getCardsColor(), hsv);
-        mCardsColorInterpolation = (int) (hsv[1] * 100.f);
+        mCardsColorInterpolation = (int) (Deinterpolate(mPackage.getPalette().getPrimary(),
+                mPackage.getPalette().getCardsColor()) * 100);
 
                 ((TextView)findViewById(R.id.package_name)).setText(mPackage.getName());
-        Button btn = findViewById(R.id.color_button);
         mPalette = ColorUtil.GetNearest(mPackage.getPalette().getPrimary());
-        ((GradientDrawable)btn.getBackground()).setColor(mPalette.getPrimary());
+        setColorButtonColor(mPalette.getPrimary());
 
         SeekBar seekBar = findViewById(R.id.cards_alpha_seekbar);
         seekBar.setProgress(mCardsColorInterpolation);
+        setCardsColorButtonColor(mPackage.getPalette().getCardsColor());
     }
 
     @Override
