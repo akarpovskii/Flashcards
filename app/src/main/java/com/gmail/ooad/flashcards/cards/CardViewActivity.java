@@ -2,7 +2,6 @@ package com.gmail.ooad.flashcards.cards;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,10 +23,10 @@ public class CardViewActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         ICardData card = intent.getParcelableExtra("card");
-        int color = intent.getIntExtra("color", ContextCompat.getColor(this, R.color.colorDefault));
+        PackagePalette palette = intent.getParcelableExtra("palette");
 
-        getWindow().setStatusBarColor(color);
-        toolbar.setBackgroundColor(color);
+        toolbar.setBackgroundColor(palette.getPrimary());
+        getWindow().setStatusBarColor(palette.getPrimaryDark());
 
         ActionBar bar = getSupportActionBar();
         if (bar != null) {
@@ -39,7 +38,7 @@ public class CardViewActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.container, CardViewFragment.NewInstance(color, card))
+                    .add(R.id.container, CardViewFragment.NewInstance(palette.getCardsColor(), card))
                     .commit();
         }
     }

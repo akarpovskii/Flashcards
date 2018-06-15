@@ -28,48 +28,51 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
      *         and then go to 'cards' table and query all the cards where 'PACKAGE' value equals 'package'.
      */
 
-    private static final String DatabaseName = "cards.db";
+    private static final String DATABASE_NAME = "cards.db";
 
-    private static final int DatabaseVersion = 3;
-
-
-
-    private static final String PackagesTable = "PACKAGES";
-
-    private static final String PackageName = "NAME";
-
-    private static final String PackageColor_old = "COLOR";
-
-    private static final String PackagePalette = "PALETTE";
+    private static final int DATABASE_VERSION = 4;
 
 
 
-    private static final String CardsTable = "CARDS";
+    private static final String PACKAGES_TABLE = "PACKAGES";
 
-    private static final String CardPackage = "PACKAGE";
+    private static final String PACKAGE_NAME = "NAME";
 
-    private static final String CardName = "NAME";
+    private static final String PACKAGE_COLOR_OLD = "COLOR";
 
-    private static final String CardFront = "FRONT";
+    private static final String PACKAGE_PALETTE = "PALETTE";
 
-    private static final String CardBack = "BACK";
+    private static final String PACKAGE_CARDS_COLOR = "CARDS_ALPHA";    // leave the column name unchanged
 
-    private static final String CreatePackagesTable = "create table " + PackagesTable + "(" +
+
+
+    private static final String CARDS_TABLE = "CARDS";
+
+    private static final String CARD_PACKAGE = "PACKAGE";
+
+    private static final String CARD_NAME = "NAME";
+
+    private static final String CARD_FRONT = "FRONT";
+
+    private static final String CARD_BACK = "BACK";
+
+    private static final String CREATE_PACKAGES_TABLE = "create table " + PACKAGES_TABLE + "(" +
             "ID integer primary key, " +
-            PackageName + " text not null," +
-            PackagePalette + " text not null);";
+            PACKAGE_NAME + " text not null," +
+            PACKAGE_PALETTE + " text not null," +
+            PACKAGE_CARDS_COLOR + " integer not null" + ");";
 
-    private static final String CreateCardsTable = "create table " + CardsTable + "(" +
+    private static final String CREATE_CARDS_TABLE = "create table " + CARDS_TABLE + "(" +
             "ID integer primary key, " +
-            CardPackage + " text not null," +
-            CardName + " text not null," +
-            CardFront + " text," +
-            CardBack + " text);";
+            CARD_PACKAGE + " text not null," +
+            CARD_NAME + " text not null," +
+            CARD_FRONT + " text," +
+            CARD_BACK + " text);";
 
     private final Context mContext;
 
     CardsDatabaseAdapter(Context context) {
-        super(context, DatabaseName, null, DatabaseVersion);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
         mContext = context;
     }
 
@@ -77,8 +80,8 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         try {
             Log.i("Flashcards", "Creating cards database...");
-            db.execSQL(CreatePackagesTable);
-            db.execSQL(CreateCardsTable);
+            db.execSQL(CREATE_PACKAGES_TABLE);
+            db.execSQL(CREATE_CARDS_TABLE);
 
             addPackage(db, CardsExampleDataHelper.GetExampleData(mContext));
         } catch (Exception ex) {
@@ -89,20 +92,22 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Should be appropriately changed before upgrade to a new version, or we will lose all the data
         if (oldVersion < 3) {
-            final String OldName = PackagesTable + "_old";
+            final String OldName = PACKAGES_TABLE + "_old";
             db.beginTransaction();
 
             try {
-                db.execSQL("alter table " + PackagesTable + " rename to " + OldName + ";");
-                db.execSQL(CreatePackagesTable);
+                db.execSQL("alter table " + PACKAGES_TABLE + " rename to " + OldName + ";");
+                db.execSQL(CREATE_PACKAGES_TABLE);
 
                 Cursor cursor = db.rawQuery("select * from " + OldName, null);
 
                 while (cursor.moveToNext()) {
-                    String name = cursor.getString(cursor.getColumnIndex(PackageName));
-                    int color = cursor.getColumnIndex(PackageColor_old);
+                    String name = cursor.getString(cursor.getColumnIndex(PACKAGE_NAME));
+                    int color = cursor.getColumnIndex(PACKAGE_COLOR_OLD);
+                    ColorPalette palette = ColorUtil.GetNearest(color);
 
-                    CardsPackageData data = new CardsPackageData(name, ColorUtil.GetNearest(color), null);
+                    CardsPackageData data = new CardsPackageData(name,
+                            new PackagePalette(palette, palette.getPrimary()),null);
                     addPackage(db, data);
                 }
 
@@ -115,20 +120,26 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
                 db.endTransaction();
             }
         }
+
+        if (oldVersion < 4) {
+            db.execSQL("alter table " + PACKAGES_TABLE +
+                    " add column " + PACKAGE_CARDS_COLOR + " integer default 255;");
+        }
     }
 
     @NonNull ArrayList<CardsPackageDataProxy> getPackageList() {
         SQLiteDatabase db = getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("select * from " + PackagesTable, null);
+        Cursor cursor = db.rawQuery("select * from " + PACKAGES_TABLE, null);
 
         ArrayList<CardsPackageDataProxy> packages = new ArrayList<>();
         while (cursor.moveToNext()) {
-            String name = cursor.getString(cursor.getColumnIndex(PackageName));
+            String name = cursor.getString(cursor.getColumnIndex(PACKAGE_NAME));
             ColorPalette palette = ColorPalette.fromValue(
-                    cursor.getString(cursor.getColumnIndex(PackagePalette)));
+                    cursor.getString(cursor.getColumnIndex(PACKAGE_PALETTE)));
+            int alpha = cursor.getInt(cursor.getColumnIndex(PACKAGE_CARDS_COLOR));
 
-            CardsPackageDataProxy data = new CardsPackageDataProxy(name, palette);
+            CardsPackageDataProxy data = new CardsPackageDataProxy(name, new PackagePalette(palette, alpha));
 
             packages.add(data);
         }
@@ -139,32 +150,33 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
     }
 
     CardsPackageDataProxy getPackage(@NonNull String name) {
-        String where = PackageName + "=?";
+        String where = PACKAGE_NAME + "=?";
         SQLiteDatabase db = getReadableDatabase();
 
-        Cursor cursor = db.query(PackagesTable, new String[]{PackagePalette}, where,
+        Cursor cursor = db.query(PACKAGES_TABLE, new String[]{PACKAGE_PALETTE}, where,
                 new String[]{name}, null, null, null);
 
         cursor.moveToFirst();
         ColorPalette palette = ColorPalette.fromValue(
-                cursor.getString(cursor.getColumnIndex(PackagePalette)));
+                cursor.getString(cursor.getColumnIndex(PACKAGE_PALETTE)));
+        int alpha = cursor.getInt(cursor.getColumnIndex(PACKAGE_CARDS_COLOR));
 
         cursor.close();
 
         db.close();
-        return new CardsPackageDataProxy(name, palette);
+        return new CardsPackageDataProxy(name, new PackagePalette(palette, alpha));
     }
 
     ArrayList<CardDataProxy> getPackageCards(@NonNull String name) {
         SQLiteDatabase db = getReadableDatabase();
 
-        String where = CardPackage + "=?";
-        Cursor cursor = db.query(CardsTable, new String[]{CardName}, where,
+        String where = CARD_PACKAGE + "=?";
+        Cursor cursor = db.query(CARDS_TABLE, new String[]{CARD_NAME}, where,
                 new String[]{name}, null, null, null);
         ArrayList<CardDataProxy> cards = new ArrayList<>();
 
         while (cursor.moveToNext()) {
-            String cardName = cursor.getString(cursor.getColumnIndex(CardName));
+            String cardName = cursor.getString(cursor.getColumnIndex(CARD_NAME));
 
             cards.add(new CardDataProxy(name, cardName));
         }
@@ -175,15 +187,15 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
     }
 
     CardData getCard(@NonNull String packageName, @NonNull String cardName) {
-        String where = CardPackage + "=? and " + CardName + "=?";
+        String where = CARD_PACKAGE + "=? and " + CARD_NAME + "=?";
         SQLiteDatabase db = getReadableDatabase();
 
-        Cursor cursor = db.query(CardsTable, null, where,
+        Cursor cursor = db.query(CARDS_TABLE, null, where,
                 new String[]{packageName, cardName}, null, null, null);
 
         cursor.moveToFirst();
-        String cardFront = cursor.getString(cursor.getColumnIndex(CardFront));
-        String cardBack = cursor.getString(cursor.getColumnIndex(CardBack));
+        String cardFront = cursor.getString(cursor.getColumnIndex(CARD_FRONT));
+        String cardBack = cursor.getString(cursor.getColumnIndex(CARD_BACK));
 
         cursor.close();
         db.close();
@@ -195,10 +207,11 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
             return false;
         }
         ContentValues values = new ContentValues();
-        values.put(PackageName, packageData.getName());
-        values.put(PackagePalette, packageData.getPalette().toValue());
+        values.put(PACKAGE_NAME, packageData.getName());
+        values.put(PACKAGE_PALETTE, packageData.getPalette().toValue());
+        values.put(PACKAGE_CARDS_COLOR, packageData.getPalette().getCardsColor());
 
-        boolean success = db.insert(PackagesTable, null, values) != -1;
+        boolean success = db.insert(PACKAGES_TABLE, null, values) != -1;
         if (success) {
             ArrayList<ICardData> cards = packageData.getCards();
             if (cards != null) {
@@ -223,12 +236,12 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
         }
 
         ContentValues values = new ContentValues();
-        values.put(CardPackage, packageName);
-        values.put(CardName, cardData.getName());
-        values.put(CardFront, cardData.getFront());
-        values.put(CardBack, cardData.getBack());
+        values.put(CARD_PACKAGE, packageName);
+        values.put(CARD_NAME, cardData.getName());
+        values.put(CARD_FRONT, cardData.getFront());
+        values.put(CARD_BACK, cardData.getBack());
 
-        return db.insert(CardsTable, null, values) != -1;
+        return db.insert(CARDS_TABLE, null, values) != -1;
     }
 
     boolean addCard(@NonNull String packageName, @NonNull ICardData cardData) {
@@ -254,17 +267,18 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
 
         if (newNameQuarried) {
-            values.put(PackageName, newPackageName);
+            values.put(PACKAGE_NAME, newPackageName);
         }
-        values.put(PackagePalette, packageData.getPalette().toValue());
+        values.put(PACKAGE_PALETTE, packageData.getPalette().toValue());
+        values.put(PACKAGE_CARDS_COLOR, packageData.getPalette().getCardsColor());
 
-        String where = PackageName + "=?";
+        String where = PACKAGE_NAME + "=?";
 
         if (oldPackageName == null) {
             oldPackageName = newPackageName;
         }
 
-        int count = db.update(PackagesTable, values, where, new String[]{oldPackageName});
+        int count = db.update(PACKAGES_TABLE, values, where, new String[]{oldPackageName});
         if (BuildConfig.DEBUG) {
             if (count != 1) throw new AssertionError();
         }
@@ -272,10 +286,10 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
         // Update cards
         if (newNameQuarried) {
             values = new ContentValues();
-            values.put(CardPackage, newPackageName);
+            values.put(CARD_PACKAGE, newPackageName);
 
-            where = CardPackage + "=?";
-            db.update(CardsTable, values, where, new String[]{oldPackageName});
+            where = CARD_PACKAGE + "=?";
+            db.update(CARDS_TABLE, values, where, new String[]{oldPackageName});
         }
         db.close();
         return true;
@@ -298,18 +312,18 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
 
         if (newNameQuarried) {
-            values.put(CardName, newCardName);
+            values.put(CARD_NAME, newCardName);
         }
-        values.put(CardFront, cardData.getFront());
-        values.put(CardBack, cardData.getBack());
+        values.put(CARD_FRONT, cardData.getFront());
+        values.put(CARD_BACK, cardData.getBack());
 
-        String where = CardPackage + "=?" + " and " + CardName + "=?";
+        String where = CARD_PACKAGE + "=?" + " and " + CARD_NAME + "=?";
 
         if (oldCardName == null) {
             oldCardName = newCardName;
         }
 
-        int count = db.update(CardsTable, values, where, new String[]{packageName, oldCardName});
+        int count = db.update(CARDS_TABLE, values, where, new String[]{packageName, oldCardName});
         if (BuildConfig.DEBUG) {
             if (count != 1) throw new AssertionError();
         }
@@ -319,7 +333,7 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
     }
 
     boolean hasPackage(SQLiteDatabase db, @NonNull String name) {
-        String query = "select * from " + PackagesTable + " where " + PackageName + "=?";
+        String query = "select * from " + PACKAGES_TABLE + " where " + PACKAGE_NAME + "=?";
         Cursor cursor = db.rawQuery(query, new String[]{name});
         boolean res = cursor.getCount() > 0;
         cursor.close();
@@ -334,7 +348,7 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
     }
 
     private boolean hasCard(SQLiteDatabase db, @NonNull String packageName, @NonNull String cardName) {
-        String query = "select * from " + CardsTable + " where " + CardPackage + "=? and " + CardName + "=?";
+        String query = "select * from " + CARDS_TABLE + " where " + CARD_PACKAGE + "=? and " + CARD_NAME + "=?";
         Cursor cursor = db.rawQuery(query, new String[]{packageName, cardName});
         boolean res = cursor.getCount() > 0;
 
@@ -352,11 +366,11 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
     void removePackage(@NonNull String packageName) {
         SQLiteDatabase db = getWritableDatabase();
 
-        String where = PackageName + "=?";
-        db.delete(PackagesTable, where, new String[]{packageName});
+        String where = PACKAGE_NAME + "=?";
+        db.delete(PACKAGES_TABLE, where, new String[]{packageName});
 
-        where = CardPackage + "=?";
-        db.delete(CardsTable, where, new String[]{packageName});
+        where = CARD_PACKAGE + "=?";
+        db.delete(CARDS_TABLE, where, new String[]{packageName});
 
         db.close();
     }
@@ -364,8 +378,8 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
     void removeCard(@NonNull String packageName, @NonNull String cardName) {
         SQLiteDatabase db = getWritableDatabase();
 
-        String where = CardPackage + "=? and " + CardName + "=?";
-        db.delete(CardsTable, where, new String[]{packageName, cardName});
+        String where = CARD_PACKAGE + "=? and " + CARD_NAME + "=?";
+        db.delete(CARDS_TABLE, where, new String[]{packageName, cardName});
 
         db.close();
     }

@@ -2,7 +2,6 @@ package com.gmail.ooad.flashcards.cards;
 
 import android.os.Parcelable;
 
-import com.gmail.ooad.flashcards.utils.ColorPalette;
 import com.gmail.ooad.flipablecardview.ICardData;
 
 import java.util.ArrayList;
@@ -15,9 +14,9 @@ public interface ICardsPackageData extends Parcelable {
 
     void setName(String name);
 
-    ColorPalette getPalette();
+    PackagePalette getPalette();
 
-    void setPalette(ColorPalette palette);
+    void setPalette(PackagePalette palette);
 
     ArrayList<ICardData> getCards();
 

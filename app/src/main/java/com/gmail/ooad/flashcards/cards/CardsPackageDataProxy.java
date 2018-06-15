@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import com.gmail.ooad.flashcards.utils.ColorPalette;
 import com.gmail.ooad.flipablecardview.ICardData;
 
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ public class CardsPackageDataProxy implements ICardsPackageData {
 
     private CardsPackageData mPackageData;
 
-    public CardsPackageDataProxy(@NonNull String name, ColorPalette palette) {
+    public CardsPackageDataProxy(@NonNull String name, PackagePalette palette) {
         mPackageData = new CardsPackageData(name, palette, null);
     }
 
@@ -48,12 +47,12 @@ public class CardsPackageDataProxy implements ICardsPackageData {
     }
 
     @Override
-    public ColorPalette getPalette() {
+    public PackagePalette getPalette() {
         return mPackageData.getPalette();
     }
 
     @Override
-    public void setPalette(ColorPalette palette) {
+    public void setPalette(PackagePalette palette) {
         mPackageData.setPalette(palette);
     }
 

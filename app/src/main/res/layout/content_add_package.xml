@@ -46,4 +46,37 @@
             android:layout_weight="0" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/add_package_color_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:textSize="@dimen/font_size"
+            android:layout_marginStart="@dimen/add_package_color_margin"
+            android:textColor="@android:color/black"
+            android:text="@string/add_package_card_alpha_hint" />
+
+        <SeekBar
+            android:id="@+id/cards_alpha_seekbar"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:max="100"
+            android:progress="0"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/cards_alpha_button"
+            android:elevation="@dimen/elevation"
+            android:background="@drawable/color_preview"
+            android:layout_width="@dimen/add_package_color_preview_width"
+            android:layout_height="@dimen/add_package_color_preview_height"
+            android:layout_marginEnd="@dimen/add_package_color_preview_margin"
+            android:layout_weight="0" />
+    </LinearLayout>
+
 </LinearLayout>

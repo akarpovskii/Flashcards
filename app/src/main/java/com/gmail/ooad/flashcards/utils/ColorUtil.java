@@ -29,6 +29,22 @@ public class ColorUtil {
         };
     }
 
+    static public int Alpha(int color) {
+        return (color >> 24) & 0xff;
+    }
+
+    static public int Red(int color) {
+        return (color >> 16) & 0xff;
+    }
+
+    static public int Green(int color) {
+        return (color >>  8) & 0xff;
+    }
+
+    static public int Blue(int color) {
+        return (color      ) & 0xff;
+    }
+
     static public ColorPalette GetNearest(int color) {
         final ColorPalette[] Palettes = GetAllPallettes();
         ColorPalette nearest = ColorPalette.RED;
@@ -55,5 +71,11 @@ public class ColorUtil {
         }
 
         return nearest;
+    }
+
+    static public int SetAlpha(int color, int alpha) {
+        color &= 0x00ffffff;
+        color |= (alpha << 24);
+        return color;
     }
 }

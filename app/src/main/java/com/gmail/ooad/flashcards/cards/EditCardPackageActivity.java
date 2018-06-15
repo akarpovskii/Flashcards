@@ -1,14 +1,17 @@
 package com.gmail.ooad.flashcards.cards;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gmail.ooad.flashcards.R;
+import com.gmail.ooad.flashcards.utils.ColorUtil;
 
 /*
  * Created by akarpovskii on 27.04.18.
@@ -24,19 +27,27 @@ public class EditCardPackageActivity extends AddCardPackageActivity {
         Intent intent = getIntent();
         mPackage = intent.getParcelableExtra("package");
 
-        ((TextView)findViewById(R.id.package_name)).setText(mPackage.getName());
+        setTitle(getString(R.string.title_edit) + mPackage.getName());
+
+        float hsv[] = new float[3];
+        Color.colorToHSV(mPackage.getPalette().getCardsColor(), hsv);
+        mCardsColorInterpolation = (int) (hsv[1] * 100.f);
+
+                ((TextView)findViewById(R.id.package_name)).setText(mPackage.getName());
         Button btn = findViewById(R.id.color_button);
-        mPalette = mPackage.getPalette();
+        mPalette = ColorUtil.GetNearest(mPackage.getPalette().getPrimary());
         ((GradientDrawable)btn.getBackground()).setColor(mPalette.getPrimary());
 
-        setTitle(getString(R.string.title_edit) + mPackage.getName());
+        SeekBar seekBar = findViewById(R.id.cards_alpha_seekbar);
+        seekBar.setProgress(mCardsColorInterpolation);
     }
 
     @Override
     protected boolean onSavePackage() {
         CharSequence name = ((TextInputEditText)findViewById(R.id.package_name)).getText();
 
-        CardsPackageData data = new CardsPackageData(name.toString(), mPalette, null);
+        CardsPackageData data = new CardsPackageData(name.toString(), new PackagePalette(mPalette,
+                Interpolate(mPalette.getPrimary(), mCardsColorInterpolation / 100.f)), null);
 
         if (name.length() == 0) {
             Toast.makeText(getApplicationContext(),

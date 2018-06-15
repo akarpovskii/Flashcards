@@ -113,7 +113,7 @@ public class CardsPackageViewActivity extends EditableListViewActivity {
 
         Intent intent = new Intent(this, CardViewActivity.class);
         intent.putExtra("card", data);
-        intent.putExtra("color", mPackageData.getPalette().getPrimary());
+        intent.putExtra("palette", mPackageData.getPalette());
         startActivityForResult(intent, SyncList);
     }
 

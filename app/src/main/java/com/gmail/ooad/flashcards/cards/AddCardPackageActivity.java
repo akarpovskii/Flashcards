@@ -1,6 +1,7 @@
 package com.gmail.ooad.flashcards.cards;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
@@ -11,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.gmail.ooad.flashcards.R;
@@ -21,6 +23,8 @@ import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
 
 public class AddCardPackageActivity extends AppCompatActivity implements ColorPickerDialogListener {
     protected ColorPalette mPalette;
+
+    protected int mCardsColorInterpolation = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,30 @@ public class AddCardPackageActivity extends AppCompatActivity implements ColorPi
         ((GradientDrawable)btn.getBackground()).setColor(mPalette.getPrimary());
 
         btn.setOnClickListener(view -> pickColor());
+
+        final Button alphaBtn = findViewById(R.id.cards_alpha_button);
+
+        SeekBar seekBar = findViewById(R.id.cards_alpha_seekbar);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mCardsColorInterpolation = progress;
+
+                ((GradientDrawable)alphaBtn.getBackground()).setColor(
+                        Interpolate(mPalette.getPrimary(), mCardsColorInterpolation / 100.f));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        seekBar.setProgress(seekBar.getProgress()); // initialize the button color
     }
 
     @Override
@@ -68,7 +96,8 @@ public class AddCardPackageActivity extends AppCompatActivity implements ColorPi
 
     protected boolean onSavePackage() {
         CharSequence name = ((TextInputEditText)findViewById(R.id.package_name)).getText();
-        CardsPackageData data = new CardsPackageData(name.toString(), mPalette, null);
+        CardsPackageData data = new CardsPackageData(name.toString(), new PackagePalette(mPalette,
+                Interpolate(mPalette.getPrimary(), mCardsColorInterpolation / 100.f)), null);
 
         if (name.length() == 0) {
             Toast.makeText(getApplicationContext(),
@@ -117,5 +146,18 @@ public class AddCardPackageActivity extends AppCompatActivity implements ColorPi
     @Override
     public void onDialogDismissed(int dialogId) {
         // do nothing
+    }
+
+    protected static int Interpolate(int color, float alpha) {
+        if (alpha < 0) {
+            alpha = 0;
+        }
+        if (alpha > 1) {
+            alpha = 1;
+        }
+        int red   = (int) (ColorUtil.Red(color)   * alpha + 0xff * (1 - alpha));
+        int green = (int) (ColorUtil.Green(color) * alpha + 0xff * (1 - alpha));
+        int blue  = (int) (ColorUtil.Blue(color)  * alpha + 0xff * (1 - alpha));
+        return Color.rgb(red, green, blue);
     }
 }

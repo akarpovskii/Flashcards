@@ -3,7 +3,7 @@ package com.gmail.ooad.flashcards.utils;
 /*
  * Created by akarpovskii on 18.05.18.
  */
-public enum ColorPalette {
+public enum ColorPalette implements IColorPalette {
     RED         (0xfff44336, 0xffd32f2f, 0xffff5252),
     PINK        (0xffe91e63, 0xffc2185b, 0xffff4081),
     PURPLE      (0xff9c27b0, 0xff7b1fa2, 0xffe040fb),
