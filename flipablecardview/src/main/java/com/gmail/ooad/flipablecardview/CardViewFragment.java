@@ -1,165 +1,91 @@
 package com.gmail.ooad.flipablecardview;
 
 import android.animation.Animator;
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-public class CardViewFragment extends Fragment {
-    private int mColor;
+/*
+ * Created by akarpovskii on 16.06.18.
+ */
+public class CardViewFragment extends CardFragment {
+    private com.github.irshulx.Editor mBack;
 
-    private ICardData mCard;
+    private com.github.irshulx.Editor mFront;
 
-    private AnimatorSet mSetRightOut;
-
-    private AnimatorSet mSetLeftIn;
-
-    private boolean mIsBackVisible = false;
-
-    private View mCardFrontLayout;
-
-    private View mCardBackLayout;
-
-    private GestureDetector mGestureDetector;
-
-    private View mCardFrame;
-
-    private TextView mTextBack;
-
-    private TextView mTextFront;
+    protected GestureDetector mGestureDetector;
 
     public static CardViewFragment NewInstance(int color, ICardData card) {
         CardViewFragment fragment = new CardViewFragment();
-        Bundle args = new Bundle();
-        args.putInt("color", color);
-        args.putParcelable("card", card);
-        fragment.setArguments(args);
+        fragment.Init(color, card);
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mColor = getArguments().getInt("color");
-            mCard = getArguments().getParcelable("card");
-        }
-    }
-
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_card_view, container, false);
     }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         mGestureDetector = new GestureDetector(getContext(), new MyClickListener());
-        // Front
-        mCardFrontLayout = view.findViewById(R.id.card_front);
-        ((CardView)mCardFrontLayout.findViewById(R.id.card_front_cardView)).setCardBackgroundColor(mColor);
 
-        mTextFront = mCardFrontLayout.findViewById(R.id.text_front);
-        mTextFront.setText(mCard.getFront());
-        // TextView catches events for some reason even with clickable=false
-        // So we need to duplicate the onClick handler
-        mTextFront.setOnTouchListener((v, event) -> mGestureDetector.onTouchEvent(event));
+        mCardFront.setOnTouchListener((v, event) -> mGestureDetector.onTouchEvent(event));
+        mCardBack.setOnTouchListener((v, event) -> mGestureDetector.onTouchEvent(event));
 
-
-        // Back
-        mCardBackLayout = view.findViewById(R.id.card_back);
-        ((CardView)mCardBackLayout.findViewById(R.id.card_back_cardView)).setCardBackgroundColor(mColor);
-
-        mTextBack = mCardBackLayout.findViewById(R.id.text_back);
-        mTextBack.setText(mCard.getBack());
-        // TextView  catches events for some reason even with clickable=false.
-        // So we need to duplicate the onClick handler
-        mTextBack.setOnTouchListener((v, event) -> mGestureDetector.onTouchEvent(event));
-        mCardBackLayout.setAlpha(0.0f);
-
-
-        mCardFrame = view.findViewById(R.id.card_view_frame);
-        mCardFrame.setOnTouchListener((v, event) -> mGestureDetector.onTouchEvent(event));
-
-        mSetRightOut = (AnimatorSet) AnimatorInflater.loadAnimator(getContext(), R.animator.card_flip_out);
-        mSetLeftIn = (AnimatorSet) AnimatorInflater.loadAnimator(getContext(), R.animator.card_flip_in);
-
-        mSetRightOut.addListener(new MyAnimatorListener());
-
-        mSetLeftIn.addListener(new MyAnimatorListener());
-
-        changeCameraDistance();
+        mBack = view.findViewById(R.id.view_back);
+        mFront = view.findViewById(R.id.view_front);
+        if (mCard != null) {
+            mBack.render(mCard.getBack());
+            mFront.render(mCard.getFront());
+        }
+        mBack.setOnTouchListener((v, event) -> mGestureDetector.onTouchEvent(event));
+        mFront.setOnTouchListener((v, event) -> mGestureDetector.onTouchEvent(event));
     }
 
-    private void changeCameraDistance() {
-        int distance = 8000;
-        float scale = getResources().getDisplayMetrics().density * distance;
-        mCardFrontLayout.setCameraDistance(scale);
-        mCardBackLayout.setCameraDistance(scale);
+    @Override
+    protected View inflateCardFront(@NonNull LayoutInflater inflater, ViewGroup parent,
+                                    Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.card_view_front, parent, false);
     }
 
-    protected void flipCard() {
-        if (!mIsBackVisible) {
-            mSetRightOut.setTarget(mCardFrontLayout);
-            mSetLeftIn.setTarget(mCardBackLayout);
-            mSetRightOut.start();
-            mSetLeftIn.start();
-            mIsBackVisible = true;
-        } else {
-            mSetRightOut.setTarget(mCardBackLayout);
-            mSetLeftIn.setTarget(mCardFrontLayout);
-            mSetRightOut.start();
-            mSetLeftIn.start();
-            mIsBackVisible = false;
-        }
+    @Override
+    protected View inflateCardBack(@NonNull LayoutInflater inflater, ViewGroup parent,
+                                   Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.card_view_back, parent, false);
     }
 
-    private class MyAnimatorListener implements Animator.AnimatorListener {
+    @Override
+    protected void onAnimationStart(Animator animation) {
+        mBack.setEnabled(false);
+        mFront.setEnabled(false);
+        mCardBack.setEnabled(false);
+        mCardFront.setEnabled(false);
+    }
 
-        @Override
-        public void onAnimationStart(Animator animation) {
-            mCardFrame.setEnabled(false);
-            mTextBack.setEnabled(false);
-            mTextFront.setEnabled(false);
-        }
+    @Override
+    protected void onAnimationEnd(Animator animation) {
+        mCardFront.setEnabled(true);
+        mCardBack.setEnabled(true);
+        mFront.setEnabled(true);
+        mBack.setEnabled(true);
+    }
 
-        @Override
-        public void onAnimationEnd(Animator animation) {
-            mCardFrame.setEnabled(true);
-            mTextFront.setEnabled(true);
-            mTextBack.setEnabled(true);
-            if (mIsBackVisible) {
-                mCardBackLayout.bringToFront();
-            } else {
-                mCardFrontLayout.bringToFront();
-            }
-        }
+    @Override
+    protected void onAnimationCancel(Animator animation) {
+        mCardFront.setEnabled(true);
+        mCardBack.setEnabled(true);
+        mFront.setEnabled(true);
+        mBack.setEnabled(true);
+    }
 
-        @Override
-        public void onAnimationCancel(Animator animation) {
-            mCardFrame.setEnabled(true);
-            mTextFront.setEnabled(true);
-            mTextBack.setEnabled(true);
-        }
+    @Override
+    protected void onAnimationRepeat(Animator animation) {
 
-        @Override
-        public void onAnimationRepeat(Animator animation) {
-
-        }
     }
 
     class MyClickListener extends GestureDetector.SimpleOnGestureListener {

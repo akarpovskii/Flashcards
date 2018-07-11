@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Pair;
 
 import com.gmail.ooad.flashcards.cards.ICardsPackageData;
-import com.gmail.ooad.flashcards.utils.ColorUtil;
 import com.gmail.ooad.flipablecardview.ICardData;
 
 import java.util.ArrayList;
@@ -33,8 +32,7 @@ public class SlideShowController {
                 packages) {
             for (ICardData card :
                     pack.getCards()) {
-                pairs.add(new Pair<>(ColorUtil.SetAlpha(
-                        pack.getPalette().getPrimary(), pack.getPalette().getCardsColor()), card));
+                pairs.add(new Pair<>(pack.getPalette().getCardsColor(), card));
             }
         }
 

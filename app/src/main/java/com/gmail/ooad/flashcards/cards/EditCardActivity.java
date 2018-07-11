@@ -3,10 +3,10 @@ package com.gmail.ooad.flashcards.cards;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gmail.ooad.flashcards.R;
+import com.gmail.ooad.flipablecardview.CardEditFragment;
 import com.gmail.ooad.flipablecardview.ICardData;
 
 /*
@@ -15,6 +15,7 @@ import com.gmail.ooad.flipablecardview.ICardData;
 public class EditCardActivity extends AddCardActivity {
 
     protected ICardData mCard;
+    private boolean mInited;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,18 +25,25 @@ public class EditCardActivity extends AddCardActivity {
 
         mCard = intent.getParcelableExtra("card");
 
-        ((TextView)findViewById(R.id.card_name)).setText(mCard.getName());
-        ((TextView)findViewById(R.id.card_front)).setText(mCard.getFront());
-        ((TextView)findViewById(R.id.card_back)).setText(mCard.getBack());
+        ((TextInputEditText) findViewById(R.id.card_name)).setText(mCard.getName());
+    }
 
-        setTitle(getString(R.string.title_edit) + mCard.getName());
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!mInited) {
+            CardEditFragment fragment = (CardEditFragment) getSupportFragmentManager().findFragmentById(R.id.container);
+            fragment.setCard(mCard);
+            mInited = true;
+        }
     }
 
     @Override
     protected boolean onSaveCard() {
         CharSequence name = ((TextInputEditText)findViewById(R.id.card_name)).getText();
-        CharSequence front = ((TextInputEditText)findViewById(R.id.card_front)).getText();
-        CharSequence back = ((TextInputEditText)findViewById(R.id.card_back)).getText();
+        CharSequence front = mEditFront.getHtml();
+        CharSequence back = mEditBack.getHtml();
         CardData data = new CardData(name.toString(), front.toString(), back.toString());
 
         if (name.length() == 0) {
@@ -45,7 +53,15 @@ public class EditCardActivity extends AddCardActivity {
             return false;
         }
 
-        String oldName = mCard.getName().equals(name.toString()) ? null : mCard.getName();
+        boolean nameChanged = !mCard.getName().equals(name.toString());
+        String oldName = nameChanged ? mCard.getName() : null;
+
+        if (nameChanged && CardsController.GetInstance().hasCard(mPackage, data.getName())) {
+            Toast.makeText(getApplicationContext(),
+                    R.string.error_card_already_exists,
+                    Toast.LENGTH_LONG).show();
+            return false;
+        }
 
         if (CardsController.GetInstance().updateCard(mPackage, data, oldName)) {
             Intent intent = new Intent();

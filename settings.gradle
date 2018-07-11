@@ -1,1 +1,1 @@
-include ':app', ':flipablecardview', ':symbolskeyboard', ':symbolskeyboardapp'
+include ':app', ':flipablecardview', ':symbolskeyboard', ':symbolskeyboardapp', ':mricheditor', ':utilities', ':cglib-for-android'

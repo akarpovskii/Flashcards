@@ -79,9 +79,9 @@ import com.gmail.ooad.symbolskeyboard.SymbolsPopup;
         emojiPopup = SymbolsPopup.Builder.fromRootView(rootView)
                 .setOnSymbolsBackspaceClickListener(ignore -> Log.d(TAG, "Clicked on Backspace"))
                 .setOnSymbolsClickListener((ignore, ignore2) -> Log.d(TAG, "Clicked on emoji"))
-                .setOnSymbolsPopupShownListener(() -> emojiButton.setImageResource(android.R.drawable.ic_menu_edit))
+                .setOnPopupKeyboardShownListener(() -> emojiButton.setImageResource(android.R.drawable.ic_menu_edit))
                 .setOnSoftKeyboardOpenListener(ignore -> Log.d(TAG, "Opened soft keyboard"))
-                .setOnSymbolsPopupDismissListener(() -> emojiButton.setImageResource(android.R.drawable.arrow_down_float))
+                .setOnPopupKeyboardDismissListener(() -> emojiButton.setImageResource(android.R.drawable.arrow_down_float))
                 .setOnSoftKeyboardCloseListener(() -> Log.d(TAG, "Closed soft keyboard"))
                 .build(new TestPackageProvider(), editText, new SimpleRecentSymbolsManager(getApplicationContext()));
     }

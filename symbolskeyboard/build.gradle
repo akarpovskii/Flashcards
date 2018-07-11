@@ -37,4 +37,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     implementation 'com.ogaclejapan.smarttablayout:library:1.6.1@aar'
+
+    implementation project(':utilities')
 }

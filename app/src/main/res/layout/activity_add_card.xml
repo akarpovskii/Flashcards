@@ -6,7 +6,7 @@
     android:orientation="vertical"
     tools:context="com.gmail.ooad.flashcards.cards.AddCardActivity">
 
-    <include layout="@layout/toolbar" />
+    <include layout="@layout/toolbar_add_card" />
 
     <include layout="@layout/content_add_card" />
 </LinearLayout>

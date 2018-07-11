@@ -3,6 +3,7 @@ package com.gmail.ooad.flashcards.cards;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
@@ -28,9 +29,11 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
      *         and then go to 'cards' table and query all the cards where 'PACKAGE' value equals 'package'.
      */
 
+    private static final String TAG = CardsDatabaseAdapter.class.getName();
+
     private static final String DATABASE_NAME = "cards.db";
 
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
 
 
@@ -116,15 +119,44 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
                 db.execSQL("drop table " + OldName + ";");
 
                 db.setTransactionSuccessful();
+            } catch (SQLException e) {
+                Log.e(TAG, e.getMessage());
+            } finally {
+                db.endTransaction();
+            }
+        }
+
+
+
+        if (oldVersion < 5) {
+            ArrayList<CardsPackageDataProxy> packages = getPackageList(db);
+
+            db.beginTransaction();
+
+            try {
+                for (CardsPackageDataProxy pack: packages){
+                    String name = pack.getName();
+
+                    for (ICardData card : getPackageCards(db, name)) {
+                        CardData data = getCard(db, name, card.getName());
+
+                        data.setFront("<p style=\"font-size: 14px;\">" + data.getFront() + "</p>");
+                        data.setBack("<p style=\"font-size: 14px;\">" + data.getBack() + "</p>");
+
+                        updateCard(db, name, data, null);
+                    }
+                }
+
+                db.setTransactionSuccessful();
+            } catch (SQLException e) {
+                Log.e(TAG, e.getMessage());
             } finally {
                 db.endTransaction();
             }
         }
     }
 
-    @NonNull ArrayList<CardsPackageDataProxy> getPackageList() {
-        SQLiteDatabase db = getReadableDatabase();
-
+    private @NonNull ArrayList<CardsPackageDataProxy> getPackageList(SQLiteDatabase db) {
         Cursor cursor = db.rawQuery("select * from " + PACKAGES_TABLE, null);
 
         ArrayList<CardsPackageDataProxy> packages = new ArrayList<>();
@@ -140,8 +172,13 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
+
         return packages;
+    }
+
+    @NonNull ArrayList<CardsPackageDataProxy> getPackageList() {
+        SQLiteDatabase db = getReadableDatabase();
+        return getPackageList(db);
     }
 
     CardsPackageDataProxy getPackage(@NonNull String name) {
@@ -158,13 +195,11 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
 
         cursor.close();
 
-        db.close();
+
         return new CardsPackageDataProxy(name, new PackagePalette(palette, alpha));
     }
 
-    ArrayList<CardDataProxy> getPackageCards(@NonNull String name) {
-        SQLiteDatabase db = getReadableDatabase();
-
+    private ArrayList<CardDataProxy> getPackageCards(SQLiteDatabase db, @NonNull String name) {
         String where = CARD_PACKAGE + "=?";
         Cursor cursor = db.query(CARDS_TABLE, new String[]{CARD_NAME}, where,
                 new String[]{name}, null, null, null);
@@ -181,9 +216,13 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
         return cards;
     }
 
-    CardData getCard(@NonNull String packageName, @NonNull String cardName) {
-        String where = CARD_PACKAGE + "=? and " + CARD_NAME + "=?";
+    ArrayList<CardDataProxy> getPackageCards(@NonNull String name) {
         SQLiteDatabase db = getReadableDatabase();
+        return getPackageCards(db, name);
+    }
+
+    private CardData getCard(SQLiteDatabase db, @NonNull String packageName, @NonNull String cardName) {
+        String where = CARD_PACKAGE + "=? and " + CARD_NAME + "=?";
 
         Cursor cursor = db.query(CARDS_TABLE, null, where,
                 new String[]{packageName, cardName}, null, null, null);
@@ -193,8 +232,13 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
         String cardBack = cursor.getString(cursor.getColumnIndex(CARD_BACK));
 
         cursor.close();
-        db.close();
+
         return new CardData(cardName, cardFront, cardBack);
+    }
+
+    CardData getCard(@NonNull String packageName, @NonNull String cardName) {
+        SQLiteDatabase db = getReadableDatabase();
+        return getCard(db, packageName, cardName);
     }
 
     private boolean addPackage(SQLiteDatabase db, @NonNull ICardsPackageData packageData) {
@@ -220,9 +264,7 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
     }
     boolean addPackage(@NonNull ICardsPackageData packageData) {
         SQLiteDatabase db = getWritableDatabase();
-        boolean success = addPackage(db, packageData);
-        db.close();
-        return success;
+        return addPackage(db, packageData);
     }
 
     private boolean addCard(SQLiteDatabase db, @NonNull String packageName, @NonNull ICardData cardData) {
@@ -241,16 +283,14 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
 
     boolean addCard(@NonNull String packageName, @NonNull ICardData cardData) {
         SQLiteDatabase db = getWritableDatabase();
-        boolean success = addCard(db, packageName, cardData);
-        db.close();
-        return success;
+        return addCard(db, packageName, cardData);
     }
 
     /**
      *
      * @param oldPackageName - if null, the name remains unchanged
      */
-    boolean updatePackage(@NonNull ICardsPackageData packageData, @Nullable String oldPackageName) {
+    private boolean updatePackage(SQLiteDatabase db, @NonNull ICardsPackageData packageData, @Nullable String oldPackageName) {
         String newPackageName = packageData.getName();
         boolean newNameQuarried = oldPackageName != null && !newPackageName.equals(oldPackageName);
 
@@ -258,7 +298,6 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
             return false;
         }
 
-        SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
 
         if (newNameQuarried) {
@@ -286,24 +325,25 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
             where = CARD_PACKAGE + "=?";
             db.update(CARDS_TABLE, values, where, new String[]{oldPackageName});
         }
-        db.close();
         return true;
     }
-
     /**
      *
-     * @param oldCardName - if null, the name remains unchanged
+     * @param oldPackageName - if null, the name remains unchanged
      */
-    boolean updateCard(@NonNull String packageName, @NonNull ICardData cardData,
-                       @Nullable String oldCardName) {
+    boolean updatePackage(@NonNull ICardsPackageData packageData, @Nullable String oldPackageName) {
+        SQLiteDatabase db = getWritableDatabase();
+        return updatePackage(db, packageData, oldPackageName);
+    }
 
+    private boolean updateCard(SQLiteDatabase db, @NonNull String packageName, @NonNull ICardData cardData,
+                       @Nullable String oldCardName) {
         String newCardName = cardData.getName();
         boolean newNameQuarried = oldCardName != null && !newCardName.equals(oldCardName);
 
         if (newNameQuarried && hasCard(packageName, newCardName)) {
             return false;
         }
-        SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
 
         if (newNameQuarried) {
@@ -323,11 +363,20 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
             if (count != 1) throw new AssertionError();
         }
 
-        db.close();
         return true;
     }
+    /**
+     *
+     * @param oldCardName - if null, the name remains unchanged
+     */
+    boolean updateCard(@NonNull String packageName, @NonNull ICardData cardData,
+                       @Nullable String oldCardName) {
 
-    boolean hasPackage(SQLiteDatabase db, @NonNull String name) {
+        SQLiteDatabase db = getWritableDatabase();
+        return updateCard(db, packageName, cardData, oldCardName);
+    }
+
+    private boolean hasPackage(SQLiteDatabase db, @NonNull String name) {
         String query = "select * from " + PACKAGES_TABLE + " where " + PACKAGE_NAME + "=?";
         Cursor cursor = db.rawQuery(query, new String[]{name});
         boolean res = cursor.getCount() > 0;
@@ -337,9 +386,7 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
 
     boolean hasPackage(@NonNull String name) {
         SQLiteDatabase db = getReadableDatabase();
-        boolean res = hasPackage(db, name);
-        db.close();
-        return res;
+        return hasPackage(db, name);
     }
 
     private boolean hasCard(SQLiteDatabase db, @NonNull String packageName, @NonNull String cardName) {
@@ -353,9 +400,7 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
 
     boolean hasCard(@NonNull String packageName, @NonNull String cardName) {
         SQLiteDatabase db = getReadableDatabase();
-        boolean res = hasCard(db, packageName, cardName);
-        db.close();
-        return res;
+        return hasCard(db, packageName, cardName);
     }
 
     void removePackage(@NonNull String packageName) {
@@ -367,7 +412,7 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
         where = CARD_PACKAGE + "=?";
         db.delete(CARDS_TABLE, where, new String[]{packageName});
 
-        db.close();
+
     }
 
     void removeCard(@NonNull String packageName, @NonNull String cardName) {
@@ -376,6 +421,6 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
         String where = CARD_PACKAGE + "=? and " + CARD_NAME + "=?";
         db.delete(CARDS_TABLE, where, new String[]{packageName, cardName});
 
-        db.close();
+
     }
 }

@@ -38,7 +38,8 @@ public class CardViewActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.container, CardViewFragment.NewInstance(palette.getCardsColor(), card))
+                    .add(R.id.container, CardViewFragment
+                            .NewInstance(palette.getCardsColor(), card))
                     .commit();
         }
     }

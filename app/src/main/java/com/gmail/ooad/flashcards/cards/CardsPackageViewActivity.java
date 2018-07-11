@@ -61,6 +61,7 @@ public class CardsPackageViewActivity extends EditableListViewActivity {
     protected void onAddRecord() {
         Intent intent = new Intent(this, AddCardActivity.class);
         intent.putExtra("package", mPackageData.getName());
+        intent.putExtra("color", mPackageData.getPalette().getCardsColor());
         startActivityForResult(intent, SyncList);
     }
 
@@ -72,6 +73,7 @@ public class CardsPackageViewActivity extends EditableListViewActivity {
 
         Intent intent = new Intent(this, EditCardActivity.class);
         intent.putExtra("package", mPackageData.getName());
+        intent.putExtra("color", mPackageData.getPalette().getCardsColor());
         intent.putExtra("card", data);
         startActivityForResult(intent, SyncList);
     }

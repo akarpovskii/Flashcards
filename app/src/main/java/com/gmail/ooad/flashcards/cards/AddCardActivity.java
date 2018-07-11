@@ -9,21 +9,28 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.even.mricheditor.RichEditor;
+import com.even.mricheditor.RichEditorPopup;
 import com.gmail.ooad.flashcards.R;
 import com.gmail.ooad.flashcards.symbols.KeyboardSymbolPackagesProvider;
+import com.gmail.ooad.flipablecardview.CardEditFragment;
 import com.gmail.ooad.symbolskeyboard.SimpleRecentSymbolsManager;
 import com.gmail.ooad.symbolskeyboard.SymbolsPopup;
 
 public class AddCardActivity extends AppCompatActivity {
     protected String mPackage;
 
-    SymbolsPopup mSymbolsPopup;
+    protected SymbolsPopup mSymbolsPopup;
+    protected RichEditorPopup mRichEditorPopup;
+
+    protected RichEditor mEditFront;
+    protected RichEditor mEditBack;
+    private boolean mInited;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,33 +49,92 @@ public class AddCardActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         mPackage = intent.getStringExtra("package");
+        int color = intent.getIntExtra("color", getResources().getColor(R.color.colorPrimary));
         assert mPackage != null;
 
-        final TextInputEditTextEx editName = findViewById(R.id.card_name);
-        final TextInputEditTextEx editFront = findViewById(R.id.card_front);
-        final TextInputEditTextEx editBack = findViewById(R.id.card_back);
+        if (savedInstanceState == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.container, CardEditFragment
+                            .NewInstance(color, null))
+                    .commitNow();
+        }
 
-        editName.setOnFocusChangeListener((v, hasFocus) -> mSymbolsPopup.setEditInterface(editName));
+        final FloatingActionButton keyboardButton = findViewById(R.id.symbols_button);
+        keyboardButton.setColorFilter(ContextCompat.getColor(this, R.color.symbol_icons),
+                PorterDuff.Mode.SRC_IN);
 
-        editFront.setOnFocusChangeListener((v, hasFocus) -> mSymbolsPopup.setEditInterface(editFront));
+        keyboardButton.setTag("keyboard");
+        keyboardButton.setOnClickListener(ignore -> {
+            String tag = (String) keyboardButton.getTag();
+            switch (tag) {
+                case "keyboard":
+                    mSymbolsPopup.toggle();
+                    keyboardButton.setTag("symbols");
+                    break;
+                case "symbols":
+                    mSymbolsPopup.dismiss();
+                    keyboardButton.setTag("richedit");
+                    mRichEditorPopup.toggle();
+                    break;
+                default:
+                    mRichEditorPopup.dismiss();
+                    keyboardButton.setTag("keyboard");
+                    break;
+            }
+        });
+    }
 
-        editBack.setOnFocusChangeListener((v, hasFocus) -> mSymbolsPopup.setEditInterface(editBack));
+    // Since edit front and edit back are initialized after the onCreate method
+    // we used to initialize popups here
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mInited) {
+            return;
+        }
+
+        CardEditFragment fragment = (CardEditFragment) getSupportFragmentManager().findFragmentById(R.id.container);
+        mEditFront = fragment.getEditorFront();
+        mEditBack = fragment.getEditorBack();
 
         ViewGroup rootView = findViewById(R.id.add_card_root);
-        final FloatingActionButton emojiButton = findViewById(R.id.emoji_button);
-        emojiButton.setColorFilter(ContextCompat.getColor(this, R.color.symbol_icons),
-                PorterDuff.Mode.SRC_IN);
-        emojiButton.setOnClickListener(ignore -> mSymbolsPopup.toggle());
+        final FloatingActionButton keyboardButton = findViewById(R.id.symbols_button);
 
         mSymbolsPopup = SymbolsPopup.Builder.fromRootView(rootView)
-                .setOnSymbolsBackspaceClickListener(ignore -> Log.d("Emoji", "Clicked on Backspace"))
-                .setOnSymbolsClickListener((ignore, ignore2) -> Log.d("Emoji", "Clicked on emoji"))
-                .setOnSymbolsPopupShownListener(() -> emojiButton.setImageResource(R.drawable.ic_keyboard))
-                .setOnSoftKeyboardOpenListener(ignore -> Log.d("Emoji", "Opened soft keyboard"))
-                .setOnSymbolsPopupDismissListener(() -> emojiButton.setImageResource(R.mipmap.ic_msg_panel_smiles))
-                .setOnSoftKeyboardCloseListener(() -> Log.d("Emoji", "Closed soft keyboard"))
-                .build(new KeyboardSymbolPackagesProvider(), editName,
+                .setOnPopupKeyboardShownListener(() -> keyboardButton.setImageResource(R.drawable.ic_text_format_black_24dp))
+                .setOnPopupKeyboardDismissListener(() -> {
+                    keyboardButton.setImageResource(R.drawable.ic_translate_24dp);
+                    keyboardButton.setTag("keyboard");
+                })
+                .build(new KeyboardSymbolPackagesProvider(), new RichEditorAdapter(this, mEditFront),
                         new SimpleRecentSymbolsManager(getApplicationContext()));
+
+        mRichEditorPopup = RichEditorPopup.Builder.fromRootView(rootView)
+                .setOnPopupKeyboardShownListener(() -> keyboardButton.setImageResource(R.drawable.ic_keyboard))
+                .setOnPopupKeyboardDismissListener(() -> {
+                    keyboardButton.setImageResource(R.drawable.ic_translate_24dp);
+                    keyboardButton.setTag("keyboard");
+                })
+                .build(mEditFront);
+
+        mEditFront.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                RichEditorAdapter adapter = new RichEditorAdapter(this, mEditFront);
+                mSymbolsPopup.setEditInterface(adapter);
+                mRichEditorPopup.setRichEditor(mEditFront);
+            }
+        });
+
+        mEditBack.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                RichEditorAdapter adapter = new RichEditorAdapter(this, mEditBack);
+                mSymbolsPopup.setEditInterface(adapter);
+                mRichEditorPopup.setRichEditor(mEditBack);
+            }
+        });
+
+        mInited = true;
     }
 
     @Override
@@ -91,6 +157,9 @@ public class AddCardActivity extends AppCompatActivity {
                     if (mSymbolsPopup.isShowing()) {
                         mSymbolsPopup.dismiss();
                     }
+                    if (mRichEditorPopup.isShowing()) {
+                        mRichEditorPopup.dismiss();
+                    }
                     finish();
                 }
                 return true;
@@ -101,8 +170,8 @@ public class AddCardActivity extends AppCompatActivity {
 
     protected boolean onSaveCard() {
         CharSequence name = ((TextInputEditText)findViewById(R.id.card_name)).getText();
-        CharSequence front = ((TextInputEditText)findViewById(R.id.card_front)).getText();
-        CharSequence back = ((TextInputEditText)findViewById(R.id.card_back)).getText();
+        CharSequence front = mEditFront.getHtml();
+        CharSequence back = mEditBack.getHtml();
         CardData data = new CardData(name.toString(), front.toString(), back.toString());
 
         if (name.length() == 0) {
@@ -123,8 +192,8 @@ public class AddCardActivity extends AppCompatActivity {
             Intent intent = new Intent();
             setResult(RESULT_OK, intent);
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 }

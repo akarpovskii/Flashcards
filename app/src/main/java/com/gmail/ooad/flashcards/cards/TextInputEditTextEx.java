@@ -26,7 +26,16 @@ public class TextInputEditTextEx extends TextInputEditText implements IEditInter
 
     @Override
     public void input(ISymbol symbol) {
-        append(symbol.getUnicode());
+        int selectionStart = Math.max(getSelectionStart(), 0);
+        int selectionEnd = Math.max(getSelectionEnd(), 0);
+
+        int start = Math.min(selectionStart, selectionEnd);
+        int end = Math.max(selectionStart, selectionEnd);
+
+        String text = symbol.getUnicode();
+
+        getText().replace(start, end, text, 0, text.length());
+        setSelection(start + text.length());
     }
 
     @Override

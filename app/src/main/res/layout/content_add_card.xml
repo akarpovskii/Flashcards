@@ -8,66 +8,71 @@
     android:id="@+id/add_card_root"
     tools:context="com.gmail.ooad.flashcards.cards.AddCardActivity">
 
-    <ScrollView
+    <!--<ScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical" >-->
+
+            <!--<android.support.design.widget.TextInputLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
+
+                <!--<com.gmail.ooad.flashcards.cards.TextInputEditTextEx-->
+                    <!--android:id="@+id/card_name"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:scrollbars="vertical"-->
+                    <!--android:inputType="textCapSentences"-->
+                    <!--android:hint="@string/edit_card_name_hint"-->
+                    <!--android:singleLine="true" />-->
+            <!--</android.support.design.widget.TextInputLayout>-->
+
+            <!--<android.support.design.widget.TextInputLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
+
+                <!--<com.gmail.ooad.flashcards.cards.TextInputEditTextEx-->
+                    <!--android:id="@+id/card_front"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:scrollbars="vertical"-->
+                    <!--android:inputType="textMultiLine|textCapSentences"-->
+                    <!--android:hint="@string/edit_card_front_hint" />-->
+            <!--</android.support.design.widget.TextInputLayout>-->
+
+            <!--<android.support.design.widget.TextInputLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
+
+                <!--<com.gmail.ooad.flashcards.cards.TextInputEditTextEx-->
+                    <!--android:id="@+id/card_back"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:scrollbars="vertical"-->
+                    <!--android:inputType="textMultiLine|textCapSentences"-->
+                    <!--android:hint="@string/edit_card_back_hint" />-->
+            <!--</android.support.design.widget.TextInputLayout>-->
+
+        <!--</LinearLayout>-->
+
+    <!--</ScrollView>-->
+
+    <FrameLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.gmail.ooad.flashcards.cards.TextInputEditTextEx
-                    android:id="@+id/card_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scrollbars="vertical"
-                    android:inputType="textCapSentences"
-                    android:hint="@string/edit_card_name_hint"
-                    android:singleLine="true" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.gmail.ooad.flashcards.cards.TextInputEditTextEx
-                    android:id="@+id/card_front"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scrollbars="vertical"
-                    android:inputType="textMultiLine|textCapSentences"
-                    android:hint="@string/edit_card_front_hint" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.gmail.ooad.flashcards.cards.TextInputEditTextEx
-                    android:id="@+id/card_back"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scrollbars="vertical"
-                    android:inputType="textMultiLine|textCapSentences"
-                    android:hint="@string/edit_card_back_hint" />
-            </android.support.design.widget.TextInputLayout>
-
-        </LinearLayout>
-
-    </ScrollView>
+        android:layout_height="match_parent" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/emoji_button"
+        android:id="@+id/symbols_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         android:layout_gravity="bottom|end"
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
         android:scaleType="centerCrop"
         tools:ignore="ContentDescription"
         app:backgroundTint="@null"
