@@ -12,13 +12,7 @@ import java.util.ArrayList;
 public interface ICardsPackageData extends Parcelable {
     String getName();
 
-    void setName(String name);
-
     PackagePalette getPalette();
 
-    void setPalette(PackagePalette palette);
-
     ArrayList<ICardData> getCards();
-
-    void setCards(ArrayList<ICardData> cards);
 }

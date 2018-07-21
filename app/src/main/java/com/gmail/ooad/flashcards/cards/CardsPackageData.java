@@ -59,28 +59,13 @@ public class CardsPackageData implements ICardsPackageData {
     }
 
     @Override
-    public void setName(String name) {
-        mName = name;
-    }
-
-    @Override
     public PackagePalette getPalette() {
         return mPalette;
     }
 
     @Override
-    public void setPalette(PackagePalette palette) {
-        mPalette = palette;
-    }
-
-    @Override
     public ArrayList<ICardData> getCards() {
         return mCards;
-    }
-
-    @Override
-    public void setCards(ArrayList<ICardData> cards) {
-        mCards = cards;
     }
 
     public static final Parcelable.Creator<CardsPackageData> CREATOR =

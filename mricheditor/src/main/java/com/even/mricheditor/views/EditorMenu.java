@@ -1,9 +1,11 @@
-package com.even.mricheditor.fragment;
+package com.even.mricheditor.views;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -17,10 +19,10 @@ import com.even.mricheditor.ActionType;
 import com.even.mricheditor.R;
 import com.even.mricheditor.RichEditor;
 import com.even.mricheditor.RichEditorCallback;
+import com.even.mricheditor.interfaces.OnInsertImageClickListener;
 import com.even.mricheditor.ui.ActionImageView;
 import com.even.mricheditor.util.FileIOUtil;
 import com.even.mricheditor.widget.ColorPaletteView;
-import com.lzy.imagepicker.ui.ImageGridActivity;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -33,8 +35,6 @@ import java.util.regex.Pattern;
  * Editor Menu Fragment
  * Created by even.wu on 8/8/17.
  */
-
-@SuppressWarnings("unused")
 @SuppressLint("ViewConstructor")
 public class EditorMenu extends LinearLayout {
     private TextView tvFontSize;
@@ -43,8 +43,6 @@ public class EditorMenu extends LinearLayout {
     private ColorPaletteView cpvFontTextColor;
     private ColorPaletteView cpvHighlightColor;
     private LinearLayout llActionBarContainer;
-
-    private static final int REQUEST_PICK_IMAGE = 137;  // truly random number
 
     private AppCompatActivity mContext;
 
@@ -106,6 +104,8 @@ public class EditorMenu extends LinearLayout {
                     R.drawable.ic_code_block, R.drawable.ic_format_quote, R.drawable.ic_code_review);
 
     private FontStyleChangeCallback mFontStyleChangeCallback;
+
+    private OnInsertImageClickListener mOnInsertImageClickListener;
 
     public EditorMenu(final AppCompatActivity context, @NonNull RichEditor richEditor) {
         super(context);
@@ -218,7 +218,8 @@ public class EditorMenu extends LinearLayout {
     }
 
     private void updateActionStates(final ActionType type, final boolean isActive) {
-        post(() -> {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(() -> {
             View view = null;
             for (Map.Entry<Integer, ActionType> e : mViewTypeMap.entrySet()) {
                 Integer key = e.getKey();
@@ -315,11 +316,13 @@ public class EditorMenu extends LinearLayout {
     }
 
     private void updateFontFamilyStates(final String font) {
-        post(() -> tvFontName.setText(font));
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(() -> tvFontName.setText(font));
     }
 
     private void updateFontStates(final ActionType type, final double value) {
-        post(() -> {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(() -> {
             switch (type) {
                 case SIZE:
                     tvFontSize.setText(String.valueOf((int) value));
@@ -334,7 +337,8 @@ public class EditorMenu extends LinearLayout {
     }
 
     private void updateFontColorStates(final ActionType type, final String color) {
-        post(() -> {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(() -> {
             String selectedColor = rgbToHex(color);
             if (selectedColor != null) {
                 if (type == ActionType.FORE_COLOR) {
@@ -365,39 +369,23 @@ public class EditorMenu extends LinearLayout {
         mRichEditor.redo();
     }
 
-    public void insertImage() {
-        Intent intent = new Intent(mContext, ImageGridActivity.class);
-        mContext.startActivityForResult(intent, REQUEST_PICK_IMAGE);
-    }
-
-    public void insertImage(String name, String path) {
-        mRichEditor.insertImageData(name, encodeFileToBase64Binary(path));
-    }
-
-    // FIXME: move to activity
-    /*
-    @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == ImagePicker.RESULT_CODE_ITEMS
-            && data != null
-            && requestCode == REQUEST_PICK_IMAGE) {
-            @SuppressWarnings("unchecked")
-            ArrayList<ImageItem> images =
-                (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-            if (images != null && !images.isEmpty()) {
-
-                //1.Insert the Base64 String (Base64.NO_WRAP)
-                ImageItem imageItem = images.get(0);
-                mRichEditor.insertImageData(imageItem.name,
-                    encodeFileToBase64Binary(imageItem.path));
-
-                //2.Insert the ImageUrl
-                //mRichEditor.insertImageUrl(
-                //    "https://avatars0.githubusercontent.com/u/5581118?v=4&u=b7ea903e397678b3675e2a15b0b6d0944f6f129e&s=400");
-            }
+    public void insertImageUrl() {
+        if (mOnInsertImageClickListener != null) {
+            mOnInsertImageClickListener.onInsertImageClick();
         }
     }
-    */
+
+    public void setOnInsertImageClick(@Nullable OnInsertImageClickListener listener) {
+        mOnInsertImageClickListener = listener;
+    }
+
+    public void insertImageUrl(String path) {
+        mRichEditor.insertImageUrl(path);
+    }
+
+    public void insertImageData(String name, String path) {
+        mRichEditor.insertImageData(name, encodeFileToBase64Binary(path));
+    }
 
     private static String encodeFileToBase64Binary(String filePath) {
         byte[] bytes = FileIOUtil.readFile2BytesByStream(filePath);
@@ -446,7 +434,7 @@ public class EditorMenu extends LinearLayout {
                 mRichEditor.fontName(value);
                 break;
             case IMAGE:
-                insertImage();
+                insertImageUrl();
                 break;
             case LINK:
                 insertLink();

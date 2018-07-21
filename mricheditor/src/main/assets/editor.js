@@ -3,8 +3,12 @@ var initSummernote = function(){
         toolbar: [],
         callbacks: {
             onInit: function(e) {
+                $('#summernote').summernote('fontName', 'Roboto');
                 $("#summernote").summernote("fullscreen.toggle");
-                $('#summernote').summernote('fontName', 'Helvetica Neue');
+//                Not sure if this is needed
+                $('#summernote').summernote({
+                    fontNames: ['Roboto', 'Merriweather', 'Montserrat', 'Open Sans', 'Playfair Display']
+                });
             }
         }
     });
@@ -12,14 +16,6 @@ var initSummernote = function(){
 
 var focus = function(){
     $('#summernote').summernote('focus');
-}
-
-var disable = function(){
-    $('#summernote').summernote('disable');
-}
-
-var enable = function(){
-    $('#summernote').summernote('enable');
 }
 
 var pasteHTML = function(html){

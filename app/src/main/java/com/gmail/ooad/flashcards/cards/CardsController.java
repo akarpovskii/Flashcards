@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.gmail.ooad.flashcards.MyApplication;
+import com.gmail.ooad.flashcards.cards.database.CardsDatabaseAdapter;
+import com.gmail.ooad.flashcards.cards.database.CardsPackageDataProxy;
 
 import java.util.ArrayList;
 
@@ -31,12 +33,8 @@ public class CardsController {
         return mCardDatabase.getPackageList();
     }
 
-    public CardsPackageDataProxy getPackage(@NonNull String name) {
+    public CardsPackageData getPackage(@NonNull String name) {
         return mCardDatabase.getPackage(name);
-    }
-
-    public ArrayList<CardDataProxy> getPackageCards(@NonNull String name) {
-        return mCardDatabase.getPackageCards(name);
     }
 
     public CardData getCard(@NonNull String packageName, @NonNull String cardName) {

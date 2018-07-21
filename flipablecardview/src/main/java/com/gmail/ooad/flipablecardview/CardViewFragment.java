@@ -2,6 +2,7 @@ package com.gmail.ooad.flipablecardview;
 
 import android.animation.Animator;
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,13 +12,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.even.mricheditor.RichViewer;
+
 /*
  * Created by akarpovskii on 16.06.18.
  */
 public class CardViewFragment extends CardFragment {
-    private com.github.irshulx.Editor mBack;
+    private RichViewer mBack;
 
-    private com.github.irshulx.Editor mFront;
+    private RichViewer mFront;
 
     protected GestureDetector mGestureDetector;
 
@@ -37,12 +40,17 @@ public class CardViewFragment extends CardFragment {
         mCardFront.setOnTouchListener((v, event) -> mGestureDetector.onTouchEvent(event));
         mCardBack.setOnTouchListener((v, event) -> mGestureDetector.onTouchEvent(event));
 
-        mBack = view.findViewById(R.id.view_back);
         mFront = view.findViewById(R.id.view_front);
+        mBack = view.findViewById(R.id.view_back);
+
         if (mCard != null) {
-            mBack.render(mCard.getBack());
-            mFront.render(mCard.getFront());
+            mBack.insertHtml(mCard.getBack());
+            mFront.insertHtml(mCard.getFront());
         }
+        
+        mFront.setBackgroundColor(Color.TRANSPARENT);
+        mBack.setBackgroundColor(Color.TRANSPARENT);
+
         mBack.setOnTouchListener((v, event) -> mGestureDetector.onTouchEvent(event));
         mFront.setOnTouchListener((v, event) -> mGestureDetector.onTouchEvent(event));
     }
@@ -104,7 +112,7 @@ public class CardViewFragment extends CardFragment {
             pressStartTime = System.currentTimeMillis();
             pressedX = e.getX();
             pressedY = e.getY();
-            return true;
+            return false;
         }
 
         @Override
@@ -113,7 +121,6 @@ public class CardViewFragment extends CardFragment {
             if (pressDuration < MAX_CLICK_DURATION &&
                     distance(pressedX, pressedY, e.getX(), e.getY()) < MAX_CLICK_DISTANCE) {
                 flipCard();
-                return true;
             }
             return false;
         }
@@ -128,5 +135,7 @@ public class CardViewFragment extends CardFragment {
         private  float pxToDp(float px) {
             return px / getResources().getDisplayMetrics().density;
         }
+
+
     }
 }

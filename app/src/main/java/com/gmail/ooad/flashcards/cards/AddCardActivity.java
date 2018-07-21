@@ -1,8 +1,10 @@
 package com.gmail.ooad.flashcards.cards;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.ContextCompat;
@@ -16,13 +18,19 @@ import android.widget.Toast;
 
 import com.even.mricheditor.RichEditor;
 import com.even.mricheditor.RichEditorPopup;
+import com.fxn.pix.Pix;
+import com.fxn.utility.PermUtil;
 import com.gmail.ooad.flashcards.R;
 import com.gmail.ooad.flashcards.symbols.KeyboardSymbolPackagesProvider;
 import com.gmail.ooad.flipablecardview.CardEditFragment;
 import com.gmail.ooad.symbolskeyboard.SimpleRecentSymbolsManager;
 import com.gmail.ooad.symbolskeyboard.SymbolsPopup;
 
+import java.util.ArrayList;
+
 public class AddCardActivity extends AppCompatActivity {
+    private static final int REQUEST_PICK_IMAGE = 137;
+    private static final int PICK_IMAGE_COUNT = 10;
     protected String mPackage;
 
     protected SymbolsPopup mSymbolsPopup;
@@ -116,6 +124,10 @@ public class AddCardActivity extends AppCompatActivity {
                     keyboardButton.setImageResource(R.drawable.ic_translate_24dp);
                     keyboardButton.setTag("keyboard");
                 })
+                .setOnInsertImageClick(() -> {
+                        mRichEditorPopup.dismiss();
+                        Pix.start(this, REQUEST_PICK_IMAGE, PICK_IMAGE_COUNT);
+                })
                 .build(mEditFront);
 
         mEditFront.setOnFocusChangeListener((v, hasFocus) -> {
@@ -143,28 +155,58 @@ public class AddCardActivity extends AppCompatActivity {
         return true;
     }
 
+    private void dissmissPopups() {
+        if (mSymbolsPopup.isShowing()) {
+            mSymbolsPopup.dismiss();
+        }
+        if (mRichEditorPopup.isShowing()) {
+            mRichEditorPopup.dismiss();
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                if (mSymbolsPopup.isShowing()) {
-                    mSymbolsPopup.dismiss();
-                }
+                dissmissPopups();
                 finish();
                 return true;
             case R.id.action_save:
                 if (onSaveCard()) {
-                    if (mSymbolsPopup.isShowing()) {
-                        mSymbolsPopup.dismiss();
-                    }
-                    if (mRichEditorPopup.isShowing()) {
-                        mRichEditorPopup.dismiss();
-                    }
+                    dissmissPopups();
                     finish();
                 }
                 return true;
             default:
                 return super.onContextItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK && requestCode == REQUEST_PICK_IMAGE) {
+            @SuppressWarnings("unchecked")
+            ArrayList<String> returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
+            for (String path : returnValue) {
+                mRichEditorPopup.insertImageUrl(path);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PermUtil.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Pix.start(this, REQUEST_PICK_IMAGE, PICK_IMAGE_COUNT);
+                } else {
+                    Toast.makeText(this, R.string.image_pick_permissions, Toast.LENGTH_LONG).show();
+                }
+            }
         }
     }
 

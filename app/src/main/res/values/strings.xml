@@ -59,8 +59,8 @@
     <string name="symbols_title">Symbols</string>
     <string name="example_cards_package_title">This is a package</string>
     <string name="example_card_name">This is a card</string>
-    <string name="example_card_front">"Front side\n(click on me)"</string>
-    <string name="example_card_back">Back side</string>
+    <string name="example_card_front"><![CDATA[<h1 style=\"text-align: center; \" center;=\"\"><font face=\"Open Sans\" neue=\"\">Front side</font></h1><h4 style=\"text-align: center; \" center;=\"\"><font face=\"Open Sans\" neue=\"\" color=\"#6ba54a\">(click on me)</font></h4><h4 style=\"text-align:\" center;=\"\"><font face=\"Open Sans\" neue=\"\" color=\"#6ba54a\"><br></font></h4><p style=\"text-align: center; \" center;=\"\"><font color=\"#e76363\" face=\"Open Sans=\"\"><span style=\"font-size: 36px;\" 36px;=\"\">&lt;3</span></font></p>]]></string>
+    <string name="example_card_back"><![CDATA[<h1 style=\"text-align: center; \" center;=\"\"><font neue=\"\" face=\"Merriweather\">Back side</font></h1><hr><p style=\"text-align: center; \" right;=\"\"><font neue=\"\" face=\"Merriweather\">I did my best :3</font></p><p style=\"text-align:\" center;=\"\" right;=\"\"><img src=\"file:///android_asset/img_cat.jpg\" style=\"float: none; width: 100%;\" 100%;=\"\"></p>]]></string>
     <string name="example_symbols_math_title">Math</string>
     <string name="example_symbols_math_symbols">⇒→⇔∧∨¬∀∃|∅∈∉⊆⊂⊇⊃∪⋂ℕℤℚℝℂ≈≤≥√∞∑∏∫∂↦°αβγδεζηθικλμνξοπρσςτυφχψωΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ</string>
     <string name="example_symbols_chem_title">Chem</string>
@@ -70,4 +70,5 @@
     <string name="error_package_already_exists">A package with this name already exists. Please, try another one</string>
     <string name="title_edit">Edit</string>
     <string name="add_package_card_alpha_hint">Cards color</string>
+    <string name="image_pick_permissions">Approve permissions to pick image</string>
 </resources>

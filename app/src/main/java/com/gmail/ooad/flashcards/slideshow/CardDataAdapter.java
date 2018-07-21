@@ -20,12 +20,16 @@ import com.gmail.ooad.flipablecardview.ICardData;
 public class CardDataAdapter extends ArrayAdapter<Pair<Integer, ICardData>> {
     CardDataAdapter(@NonNull Context context) {
         super(context, 0);
+        setNotifyOnChange(false);
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         Pair<Integer, ICardData> item = getItem(position);
+        if (position > 2) {
+            remove(getItem(position - 3));
+        }
         if (item == null) {
             throw new NullPointerException("Required position is greater than expected");
         }
@@ -43,6 +47,7 @@ public class CardDataAdapter extends ArrayAdapter<Pair<Integer, ICardData>> {
                     .add(id, CardViewFragment
                             .NewInstance(item.first, item.second))
                     .commit();
+//            remove(item);
             return layout;
         } else {
             ((AppCompatActivity)parent.getContext())
@@ -51,6 +56,7 @@ public class CardDataAdapter extends ArrayAdapter<Pair<Integer, ICardData>> {
                     .replace(convertView.getId(), CardViewFragment
                             .NewInstance(item.first, item.second))
                     .commit();
+//            remove(item);
             return convertView;
 
         }

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorPrimaryPix">#ffc107</color>
+    <color name="colorPrimaryLightPix">#ffd54f</color>
     <color name="colorPrimaryLight">#ffd54f</color>
     <color name="colorPrimary">#ffc107</color>
     <color name="colorPrimaryDark">#ffa000</color>

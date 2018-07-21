@@ -48,28 +48,13 @@ public class CardData implements ICardData {
     }
 
     @Override
-    public void setName(String name) {
-        mName = name;
-    }
-
-    @Override
     public String getFront() {
         return mFront;
     }
 
     @Override
-    public void setFront(String front) {
-        mFront = front;
-    }
-
-    @Override
     public String getBack() {
         return mBack;
-    }
-
-    @Override
-    public void setBack(String back) {
-        mBack = back;
     }
 
     public static final Parcelable.Creator<CardData> CREATOR =

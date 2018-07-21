@@ -78,4 +78,25 @@ public class ColorUtil {
         color |= (alpha << 24);
         return color;
     }
+
+    static public int Interpolate(int color, float alpha) {
+        if (alpha < 0) {
+            alpha = 0;
+        }
+        if (alpha > 1) {
+            alpha = 1;
+        }
+        int red   = (int) (ColorUtil.Red(color)   * alpha + 0xff * (1 - alpha));
+        int green = (int) (ColorUtil.Green(color) * alpha + 0xff * (1 - alpha));
+        int blue  = (int) (ColorUtil.Blue(color)  * alpha + 0xff * (1 - alpha));
+        return Color.rgb(red, green, blue);
+    }
+
+    static public float Deinterpolate(int baseColor, int interpolated) {
+        float alphaR = (float) (ColorUtil.Red(interpolated) - 0xff) / (ColorUtil.Red(baseColor) - 0xff);
+        float alphaG = (float) (ColorUtil.Green(interpolated) - 0xff) / (ColorUtil.Green(baseColor) - 0xff);
+        float alphaB = (float) (ColorUtil.Blue(interpolated) - 0xff) / (ColorUtil.Blue(baseColor) - 0xff);
+
+        return (float) Math.sqrt((alphaR*alphaR + alphaG*alphaG + alphaB*alphaB) / 3);
+    }
 }

@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.gmail.ooad.flashcards.R;
+import com.gmail.ooad.flashcards.cards.database.CardsPackageDataProxy;
 import com.gmail.ooad.flashcards.slideshow.SlideShowController;
 import com.gmail.ooad.flashcards.utils.ShareableEditableListViewActivity;
 
@@ -128,7 +129,7 @@ public class CardsPackagesListActivity extends ShareableEditableListViewActivity
 
         Intent intent = new Intent(this, CardsPackageViewActivity.class);
         intent.putExtra("package", data);
-        startActivityForResult(intent, SyncList);
+        startActivity(intent);
     }
 
     @Override

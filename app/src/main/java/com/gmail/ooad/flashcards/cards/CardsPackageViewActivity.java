@@ -45,14 +45,10 @@ public class CardsPackageViewActivity extends EditableListViewActivity {
     protected void syncListWitchDatabase() {
         mRecordAdapter.clear();
 
-        ArrayList<CardDataProxy> proxies = CardsController.GetInstance().getPackageCards(mPackageData.getName());
+        mPackageData = CardsController.GetInstance().getPackage(mPackageData.getName());
 
-        ArrayList<ICardData> cards = new ArrayList<>();
-        //noinspection CollectionAddAllCanBeReplacedWithConstructor
-        cards.addAll(proxies);
-        mPackageData.setCards(cards);
         for (ICardData card:
-                cards) {
+                mPackageData.getCards()) {
             mRecordAdapter.add(card.getName());
         }
     }
@@ -116,7 +112,7 @@ public class CardsPackageViewActivity extends EditableListViewActivity {
         Intent intent = new Intent(this, CardViewActivity.class);
         intent.putExtra("card", data);
         intent.putExtra("palette", mPackageData.getPalette());
-        startActivityForResult(intent, SyncList);
+        startActivity(intent);
     }
 
     @Override
@@ -127,13 +123,5 @@ public class CardsPackageViewActivity extends EditableListViewActivity {
     @Override
     protected CharSequence getCustomTitle() {
         return mPackageData.getName();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        Intent intent = new Intent();
-        setResult(RESULT_OK, intent);
     }
 }

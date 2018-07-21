@@ -11,13 +11,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.even.mricheditor.R;
-import com.even.mricheditor.R2;
 
 import java.util.Arrays;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Color PaletteView
@@ -25,7 +21,7 @@ import butterknife.ButterKnife;
  */
 
 public class ColorPaletteView extends LinearLayout {
-    @BindView(R2.id.ll_color_container) LinearLayout llColorContainer;
+    private LinearLayout llColorContainer;
 
     private String selectedColor;
     private OnColorChangeListener mOnColorChangeListener;
@@ -57,7 +53,8 @@ public class ColorPaletteView extends LinearLayout {
     private void init(Context context) {
         final View rootView =
             LayoutInflater.from(context).inflate(R.layout.view_color_palette, this, true);
-        ButterKnife.bind(this, rootView);
+
+        llColorContainer = rootView.findViewById(R.id.ll_color_container);
 
         int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 25,
             getResources().getDisplayMetrics());

@@ -36,7 +36,7 @@ public class RoundView extends View {
 
     private void init(Context context, AttributeSet attrs) {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.RoundView);
-        backgroundColor = ta.getColor(R.styleable.roundView_backgroundColor, Color.WHITE);
+        backgroundColor = ta.getColor(R.styleable.RoundView_backgroundColor, Color.WHITE);
         ta.recycle();
 
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);

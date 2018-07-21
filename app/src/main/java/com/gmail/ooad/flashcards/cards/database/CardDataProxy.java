@@ -1,9 +1,11 @@
-package com.gmail.ooad.flashcards.cards;
+package com.gmail.ooad.flashcards.cards.database;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.gmail.ooad.flashcards.cards.CardData;
+import com.gmail.ooad.flashcards.cards.CardsController;
 import com.gmail.ooad.flipablecardview.ICardData;
 
 public class CardDataProxy implements ICardData {
@@ -18,7 +20,7 @@ public class CardDataProxy implements ICardData {
         mPackageName = packageName;
     }
 
-    CardDataProxy(Parcel in) {
+    private CardDataProxy(Parcel in) {
         mCardData = new CardData(in);
         mPackageName = in.readString();
         mInited = in.readInt() == 1;
@@ -37,23 +39,13 @@ public class CardDataProxy implements ICardData {
     }
 
     private void init() {
-        CardData data = CardsController.GetInstance().getCard(mPackageName, mCardData.getName());
-        mCardData.setFront(data.getFront());
-        mCardData.setBack(data.getBack());
+        mCardData = CardsController.GetInstance().getCard(mPackageName, mCardData.getName());
         mInited = true;
     }
 
     @Override
     public String getName() {
         return mCardData.getName();
-    }
-
-    @Override
-    public void setName(String name) {
-        if (!mInited) {
-            init();
-        }
-        mCardData.setName(name);
     }
 
     @Override
@@ -65,27 +57,11 @@ public class CardDataProxy implements ICardData {
     }
 
     @Override
-    public void setFront(String front) {
-        if (!mInited) {
-            init();
-        }
-        mCardData.setFront(front);
-    }
-
-    @Override
     public String getBack() {
         if (!mInited) {
             init();
         }
         return mCardData.getBack();
-    }
-
-    @Override
-    public void setBack(String back) {
-        if (!mInited) {
-            init();
-        }
-        mCardData.setBack(back);
     }
 
     public static final Parcelable.Creator<CardDataProxy> CREATOR =

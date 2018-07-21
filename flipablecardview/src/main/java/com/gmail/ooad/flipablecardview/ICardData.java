@@ -8,13 +8,7 @@ import android.os.Parcelable;
 public interface ICardData extends Parcelable {
     String getName();
 
-    void setName(String name);
-
     String getFront();
 
-    void setFront(String front);
-
     String getBack();
-
-    void setBack(String back);
 }

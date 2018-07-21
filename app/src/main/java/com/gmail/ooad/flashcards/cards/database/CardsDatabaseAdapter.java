@@ -1,4 +1,4 @@
-package com.gmail.ooad.flashcards.cards;
+package com.gmail.ooad.flashcards.cards.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -11,6 +11,10 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.gmail.ooad.flashcards.BuildConfig;
+import com.gmail.ooad.flashcards.cards.CardData;
+import com.gmail.ooad.flashcards.cards.CardsPackageData;
+import com.gmail.ooad.flashcards.cards.ICardsPackageData;
+import com.gmail.ooad.flashcards.cards.PackagePalette;
 import com.gmail.ooad.flashcards.utils.ColorPalette;
 import com.gmail.ooad.flashcards.utils.ColorUtil;
 import com.gmail.ooad.flipablecardview.ICardData;
@@ -21,7 +25,7 @@ import java.util.ArrayList;
  * Created by akarpovskii on 14.04.18.
  */
 
-class CardsDatabaseAdapter extends SQLiteOpenHelper {
+public class CardsDatabaseAdapter extends SQLiteOpenHelper {
     /**
      * schema: Table 'packages' contains packages data (surprisingly) without cards;
      *         table 'cards'    contains all the cards one after another with column 'PACKAGE'
@@ -74,7 +78,7 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
 
     private final Context mContext;
 
-    CardsDatabaseAdapter(Context context) {
+    public CardsDatabaseAdapter(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         mContext = context;
     }
@@ -86,7 +90,9 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
             db.execSQL(CREATE_PACKAGES_TABLE);
             db.execSQL(CREATE_CARDS_TABLE);
 
-            addPackage(db, CardsExampleDataHelper.GetExampleData(mContext));
+            for (CardsPackageData pack : CardsExampleDataHelper.GetExampleData(mContext)) {
+                addPackage(db, pack);
+            }
         } catch (Exception ex) {
             Log.e("Flashcards", ex.toString());
         }
@@ -139,11 +145,13 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
 
                     for (ICardData card : getPackageCards(db, name)) {
                         CardData data = getCard(db, name, card.getName());
+                        final String pre = "<p style=\"text-align: center; \"><font face=\"Helvetica Neue\"><span style=\"font-size: 24px;\">";
+                        final String post = "</span></font></p>";
 
-                        data.setFront("<p style=\"font-size: 14px;\">" + data.getFront() + "</p>");
-                        data.setBack("<p style=\"font-size: 14px;\">" + data.getBack() + "</p>");
+                        final String front = pre + data.getFront().replace("\n", "<br>") + post;
+                        final String back = pre + data.getBack().replace("\n", "<br>") + post;
 
-                        updateCard(db, name, data, null);
+                        updateCard(db, name, new CardData(name, front, back), null);
                     }
                 }
 
@@ -176,16 +184,16 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
         return packages;
     }
 
-    @NonNull ArrayList<CardsPackageDataProxy> getPackageList() {
+    public @NonNull ArrayList<CardsPackageDataProxy> getPackageList() {
         SQLiteDatabase db = getReadableDatabase();
         return getPackageList(db);
     }
 
-    CardsPackageDataProxy getPackage(@NonNull String name) {
+    public CardsPackageData getPackage(@NonNull String name) {
         String where = PACKAGE_NAME + "=?";
         SQLiteDatabase db = getReadableDatabase();
 
-        Cursor cursor = db.query(PACKAGES_TABLE, new String[]{PACKAGE_PALETTE}, where,
+        Cursor cursor = db.query(PACKAGES_TABLE, null, where,
                 new String[]{name}, null, null, null);
 
         cursor.moveToFirst();
@@ -196,7 +204,8 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
         cursor.close();
 
 
-        return new CardsPackageDataProxy(name, new PackagePalette(palette, alpha));
+        return new CardsPackageData(name, new PackagePalette(palette, alpha),
+                new ArrayList<>(getPackageCards(db, name)));
     }
 
     private ArrayList<CardDataProxy> getPackageCards(SQLiteDatabase db, @NonNull String name) {
@@ -216,11 +225,6 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
         return cards;
     }
 
-    ArrayList<CardDataProxy> getPackageCards(@NonNull String name) {
-        SQLiteDatabase db = getReadableDatabase();
-        return getPackageCards(db, name);
-    }
-
     private CardData getCard(SQLiteDatabase db, @NonNull String packageName, @NonNull String cardName) {
         String where = CARD_PACKAGE + "=? and " + CARD_NAME + "=?";
 
@@ -236,7 +240,7 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
         return new CardData(cardName, cardFront, cardBack);
     }
 
-    CardData getCard(@NonNull String packageName, @NonNull String cardName) {
+    public CardData getCard(@NonNull String packageName, @NonNull String cardName) {
         SQLiteDatabase db = getReadableDatabase();
         return getCard(db, packageName, cardName);
     }
@@ -262,7 +266,8 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
         }
         return success;
     }
-    boolean addPackage(@NonNull ICardsPackageData packageData) {
+
+    public boolean addPackage(@NonNull ICardsPackageData packageData) {
         SQLiteDatabase db = getWritableDatabase();
         return addPackage(db, packageData);
     }
@@ -281,7 +286,7 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
         return db.insert(CARDS_TABLE, null, values) != -1;
     }
 
-    boolean addCard(@NonNull String packageName, @NonNull ICardData cardData) {
+    public boolean addCard(@NonNull String packageName, @NonNull ICardData cardData) {
         SQLiteDatabase db = getWritableDatabase();
         return addCard(db, packageName, cardData);
     }
@@ -327,11 +332,12 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
         }
         return true;
     }
+
     /**
      *
      * @param oldPackageName - if null, the name remains unchanged
      */
-    boolean updatePackage(@NonNull ICardsPackageData packageData, @Nullable String oldPackageName) {
+    public boolean updatePackage(@NonNull ICardsPackageData packageData, @Nullable String oldPackageName) {
         SQLiteDatabase db = getWritableDatabase();
         return updatePackage(db, packageData, oldPackageName);
     }
@@ -369,7 +375,7 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
      *
      * @param oldCardName - if null, the name remains unchanged
      */
-    boolean updateCard(@NonNull String packageName, @NonNull ICardData cardData,
+    public boolean updateCard(@NonNull String packageName, @NonNull ICardData cardData,
                        @Nullable String oldCardName) {
 
         SQLiteDatabase db = getWritableDatabase();
@@ -384,7 +390,7 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
         return res;
     }
 
-    boolean hasPackage(@NonNull String name) {
+    public boolean hasPackage(@NonNull String name) {
         SQLiteDatabase db = getReadableDatabase();
         return hasPackage(db, name);
     }
@@ -398,12 +404,12 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
         return res;
     }
 
-    boolean hasCard(@NonNull String packageName, @NonNull String cardName) {
+    public boolean hasCard(@NonNull String packageName, @NonNull String cardName) {
         SQLiteDatabase db = getReadableDatabase();
         return hasCard(db, packageName, cardName);
     }
 
-    void removePackage(@NonNull String packageName) {
+    public void removePackage(@NonNull String packageName) {
         SQLiteDatabase db = getWritableDatabase();
 
         String where = PACKAGE_NAME + "=?";
@@ -415,7 +421,7 @@ class CardsDatabaseAdapter extends SQLiteOpenHelper {
 
     }
 
-    void removeCard(@NonNull String packageName, @NonNull String cardName) {
+    public void removeCard(@NonNull String packageName, @NonNull String cardName) {
         SQLiteDatabase db = getWritableDatabase();
 
         String where = CARD_PACKAGE + "=? and " + CARD_NAME + "=?";

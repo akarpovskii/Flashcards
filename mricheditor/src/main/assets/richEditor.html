@@ -10,8 +10,11 @@
     <link href="dist/summernote.css" rel="stylesheet">
     <script src="dist/summernote.js"></script>
 
+    <link href="fonts.css" rel="stylesheet">
+
     <script src='editor.js'></script>
 </head>
+
 <style>
     .note-editor.note-frame {
         border: 0px solid;
@@ -36,6 +39,11 @@
         background-color: transparent !important;
         font-size: 18px !important;
     }
+
+    ::selection {
+        color: white;
+    }
+
 </style>
 
 <body>
@@ -44,7 +52,7 @@
     $(document).ready(function() {
         initSummernote();
     });
-
 </script>
+
 </body>
 </html>

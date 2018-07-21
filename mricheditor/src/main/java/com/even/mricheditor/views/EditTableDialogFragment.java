@@ -1,4 +1,4 @@
-package com.even.mricheditor.fragment;
+package com.even.mricheditor.views;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

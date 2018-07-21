@@ -44,6 +44,7 @@ dependencies {
     implementation 'com.github.moonlightnvkz:CardStackView:-SNAPSHOT'
     implementation 'com.jaredrummler:colorpicker:1.0.2'
     implementation project(':cglib-for-android')
+    implementation  'com.fxn769:pix:1.2.1'
 }
 
 //configurations.all {

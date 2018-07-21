@@ -1,8 +1,10 @@
 package com.even.mricheditor;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.webkit.JavascriptInterface;
+import android.widget.FrameLayout;
 
 import com.google.gson.Gson;
 
@@ -31,6 +33,20 @@ public class RichEditorCallback {
         Arrays.asList(ActionType.ORDERED, ActionType.UNORDERED);
 
     @Nullable private FontStyleChangeListener mFontStyleChangeListener;
+
+    private RichEditor mRichEditor;
+
+    RichEditorCallback(@NonNull RichEditor editor) {
+        mRichEditor = editor;
+    }
+
+    @JavascriptInterface
+    public void resize(final float height) {
+        mRichEditor.post(() ->
+                mRichEditor.setLayoutParams(
+                        new FrameLayout.LayoutParams(mRichEditor.getResources().getDisplayMetrics().widthPixels,
+                        (int) (height * mRichEditor.getResources().getDisplayMetrics().density))));
+    }
 
     @JavascriptInterface public void returnHtml(String html) {
         if (onGetHtmlListener != null) {

@@ -34,7 +34,7 @@ public class CardEditFragment extends CardFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Some hacks
         FrameLayout view = (FrameLayout) super.onCreateView(inflater, container, savedInstanceState);
-        View btnView = inflater.inflate(R.layout.card_edit_flip_btn, view, true);
+        inflater.inflate(R.layout.card_edit_flip_btn, view, true);
         return view;
     }
 
@@ -43,8 +43,8 @@ public class CardEditFragment extends CardFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mBack = view.findViewById(R.id.edit_back);
         mFront = view.findViewById(R.id.edit_front);
+        mBack = view.findViewById(R.id.edit_back);
         mFront.requestFocus();
 
         if (mCard != null) {
@@ -52,7 +52,7 @@ public class CardEditFragment extends CardFragment {
             mFront.insertHtml(mCard.getFront());
         }
 
-        mFront.setBackgroundColor(0x01000000);
+        mFront.setBackgroundColor(Color.TRANSPARENT);
         mBack.setBackgroundColor(Color.TRANSPARENT);
 
         mFlipBtn = view.findViewById(R.id.flip_btn);
@@ -65,18 +65,6 @@ public class CardEditFragment extends CardFragment {
         mFront.insertHtml(mCard.getFront());
         mBack.empty();
         mBack.insertHtml(mCard.getBack());
-    }
-
-    public String getFront() {
-        return mFront.getHtml();
-    }
-
-    public String getBack() {
-        return mBack.getHtml();
-    }
-
-    public RichEditor getEditorCurrent() {
-        return mIsFrontVisible ? mFront : mBack;
     }
 
     public RichEditor getEditorFront() {

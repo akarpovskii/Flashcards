@@ -26,7 +26,7 @@ public class EditCardPackageActivity extends AddCardPackageActivity {
 
         setTitle(getString(R.string.title_edit) + mPackage.getName());
 
-        mCardsColorInterpolation = (int) (Deinterpolate(mPackage.getPalette().getPrimary(),
+        mCardsColorInterpolation = (int) (ColorUtil.Deinterpolate(mPackage.getPalette().getPrimary(),
                 mPackage.getPalette().getCardsColor()) * 100);
 
                 ((TextView)findViewById(R.id.package_name)).setText(mPackage.getName());
@@ -43,7 +43,7 @@ public class EditCardPackageActivity extends AddCardPackageActivity {
         CharSequence name = ((TextInputEditText)findViewById(R.id.package_name)).getText();
 
         CardsPackageData data = new CardsPackageData(name.toString(), new PackagePalette(mPalette,
-                Interpolate(mPalette.getPrimary(), mCardsColorInterpolation / 100.f)), null);
+                ColorUtil.Interpolate(mPalette.getPrimary(), mCardsColorInterpolation / 100.f)), null);
 
         if (name.length() == 0) {
             Toast.makeText(getApplicationContext(),

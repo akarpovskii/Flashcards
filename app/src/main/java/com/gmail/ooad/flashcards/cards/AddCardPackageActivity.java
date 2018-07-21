@@ -1,7 +1,6 @@
 package com.gmail.ooad.flashcards.cards;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
@@ -53,7 +52,7 @@ public class AddCardPackageActivity extends AppCompatActivity implements ColorPi
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 mCardsColorInterpolation = progress;
 
-                setCardsColorButtonColor(Interpolate(mPalette.getPrimary(),
+                setCardsColorButtonColor(ColorUtil.Interpolate(mPalette.getPrimary(),
                         mCardsColorInterpolation / 100.f));
             }
 
@@ -95,7 +94,7 @@ public class AddCardPackageActivity extends AppCompatActivity implements ColorPi
     protected boolean onSavePackage() {
         CharSequence name = ((TextInputEditText)findViewById(R.id.package_name)).getText();
         CardsPackageData data = new CardsPackageData(name.toString(), new PackagePalette(mPalette,
-                Interpolate(mPalette.getPrimary(),
+                ColorUtil.Interpolate(mPalette.getPrimary(),
                         mCardsColorInterpolation / 100.f)), null);
 
         if (name.length() == 0) {
@@ -140,34 +139,13 @@ public class AddCardPackageActivity extends AppCompatActivity implements ColorPi
         mPalette = ColorUtil.GetNearest(color);
         setColorButtonColor(mPalette.getPrimary());
 
-        setCardsColorButtonColor(Interpolate(mPalette.getPrimary(),
+        setCardsColorButtonColor(ColorUtil.Interpolate(mPalette.getPrimary(),
                 mCardsColorInterpolation / 100.f));
     }
 
     @Override
     public void onDialogDismissed(int dialogId) {
         // do nothing
-    }
-
-    protected static int Interpolate(int color, float alpha) {
-        if (alpha < 0) {
-            alpha = 0;
-        }
-        if (alpha > 1) {
-            alpha = 1;
-        }
-        int red   = (int) (ColorUtil.Red(color)   * alpha + 0xff * (1 - alpha));
-        int green = (int) (ColorUtil.Green(color) * alpha + 0xff * (1 - alpha));
-        int blue  = (int) (ColorUtil.Blue(color)  * alpha + 0xff * (1 - alpha));
-        return Color.rgb(red, green, blue);
-    }
-
-    protected static float Deinterpolate(int baseColor, int interpolated) {
-        float alphaR = (float) (ColorUtil.Red(interpolated) - 0xff) / (ColorUtil.Red(baseColor) - 0xff);
-        float alphaG = (float) (ColorUtil.Green(interpolated) - 0xff) / (ColorUtil.Green(baseColor) - 0xff);
-        float alphaB = (float) (ColorUtil.Blue(interpolated) - 0xff) / (ColorUtil.Blue(baseColor) - 0xff);
-
-        return (float) Math.sqrt((alphaR*alphaR + alphaG*alphaG + alphaB*alphaB) / 3);
     }
 
     protected void setColorButtonColor(int color) {

@@ -88,7 +88,6 @@ public class SlideShowActivity extends AppCompatActivity {
         }
 
         mAdapter.addAll(cards);
-
         loadCardStack();
     }
 

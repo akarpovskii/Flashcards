@@ -1,4 +1,4 @@
-package com.even.mricheditor.fragment;
+package com.even.mricheditor.views;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -30,8 +30,7 @@ public class FontSettingDialogFragment extends DialogFragment {
     public static final int TYPE_FONT_FAMILY = 2;
 
     private static final List<String> FONT_FAMILY_LIST =
-        Arrays.asList("Arial", "Arial Black", "Comic Sans MS", "Courier New", "Helvetica Neue",
-            "Helvetica", "Impact", "Lucida Grande", "Tahoma", "Times New Roman", "Verdana");
+        Arrays.asList("Roboto", "Merriweather", "Montserrat", "Open Sans", "Playfair Display");
 
     private static final List<String> FONT_SIZE_LIST =
         Arrays.asList("12", "14", "16", "18", "20", "22", "24", "26", "28", "36");

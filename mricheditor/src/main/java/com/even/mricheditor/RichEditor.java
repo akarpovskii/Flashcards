@@ -2,10 +2,11 @@ package com.even.mricheditor;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -51,19 +52,18 @@ public class RichEditor extends WebView {
 
     @SuppressLint("SetJavaScriptEnabled")
     private void init() {
-        setWebChromeClient(new CustomWebChromeClient());
-        getSettings().setJavaScriptEnabled(true);
         getSettings().setDomStorageEnabled(true);
+        getSettings().setJavaScriptEnabled(true);
 
-        mRichEditorCallback = new RichEditorCallback();
+        mRichEditorCallback = new RichEditorCallback(this);
 
         addJavascriptInterface(mRichEditorCallback, "MRichEditor");
         loadUrl("file:///android_asset/richEditor.html");
 
         setWebViewClient(new WebViewClient() {
             @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
+               view.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+               return true;
             }
 
             @Override
@@ -80,20 +80,6 @@ public class RichEditor extends WebView {
                 }
             }
         });
-    }
-
-    private class CustomWebChromeClient extends WebChromeClient {
-
-        @Override public void onProgressChanged(WebView view, int newProgress) {
-            super.onProgressChanged(view, newProgress);
-            if (newProgress == 100) {
-//                insertText("Hello World");
-            }
-        }
-
-        @Override public void onReceivedTitle(WebView view, String title) {
-            super.onReceivedTitle(view, title);
-        }
     }
 
     private void evaluateCommand(String script) {
